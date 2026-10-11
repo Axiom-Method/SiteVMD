@@ -1,8 +1,10 @@
+import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { ButtonLink } from "@/components/ui/Button";
 
 export function TecnicosOlheiros() {
   return (
     <section className="secao" aria-labelledby="tecnicos">
+      <FundoEsportivo tipo="rastro" />
       <div className="container caixa">
         <div>
           <h2 id="tecnicos" className="titulo-secao titulo-secao--pequeno">

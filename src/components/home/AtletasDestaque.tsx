@@ -1,10 +1,12 @@
-import { CardAtleta } from "@/components/atletas/CardAtleta";
+import { FundoEsportivo } from "@/components/home/FundoEsportivo";
+import { CarrosselAtletas } from "@/components/home/CarrosselAtletas";
 import { ButtonLink } from "@/components/ui/Button";
 import type { AtletaResumo } from "@/constants/atletas-destaque";
 
 export function AtletasDestaque({ atletas }: { atletas: readonly AtletaResumo[] }) {
   return (
-    <section className="secao secao--escura" aria-labelledby="atletas-destaque">
+    <section className="secao secao--escura secao--carrossel" aria-labelledby="atletas-destaque">
+      <FundoEsportivo tipo="pista" />
       <div className="container">
         <h2 id="atletas-destaque" className="titulo-secao">
           Resultados e <span className="destaque">atletas</span>
@@ -14,11 +16,7 @@ export function AtletasDestaque({ atletas }: { atletas: readonly AtletaResumo[] 
         {atletas.length === 0 ? (
           <p className="vazio">Em breve, novos atletas em destaque.</p>
         ) : (
-          <div className="grade grade--4">
-            {atletas.map((a) => (
-              <CardAtleta key={a.slug} atleta={a} />
-            ))}
-          </div>
+          <CarrosselAtletas atletas={atletas} />
         )}
 
         <div className="centro">

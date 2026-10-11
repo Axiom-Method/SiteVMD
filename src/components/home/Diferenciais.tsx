@@ -1,3 +1,5 @@
+import { FundoEsportivo } from "@/components/home/FundoEsportivo";
+
 const DIFERENCIAIS = [
   "Atendimento próximo e humanizado",
   "Estratégias personalizadas",
@@ -12,6 +14,7 @@ const DIFERENCIAIS = [
 export function Diferenciais() {
   return (
     <section className="secao secao--escura" aria-labelledby="diferenciais">
+      <FundoEsportivo tipo="quadra" />
       <div className="container">
         <h2 id="diferenciais" className="titulo-secao">
           Diferenciais <span className="destaque">VMD</span>
