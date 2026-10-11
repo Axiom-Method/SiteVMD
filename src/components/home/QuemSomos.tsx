@@ -1,6 +1,8 @@
+import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 export function QuemSomos() {
   return (
     <section className="secao" aria-labelledby="quem-somos">
+      <FundoEsportivo tipo="campo" />
       <div className="container duas-colunas">
         <h2 id="quem-somos" className="titulo-secao">
           Quem <span className="destaque">somos?</span>

@@ -4,8 +4,8 @@ import { ComoFunciona } from "@/components/home/ComoFunciona";
 import { CtaFinal } from "@/components/home/CtaFinal";
 import { Diferenciais } from "@/components/home/Diferenciais";
 import { Hero } from "@/components/home/Hero";
-import { PlanosResumo } from "@/components/home/PlanosResumo";
 import { QuemSomos } from "@/components/home/QuemSomos";
+import { Servicos } from "@/components/home/Servicos";
 import { TecnicosOlheiros } from "@/components/home/TecnicosOlheiros";
 import { ATLETAS_DESTAQUE } from "@/constants/atletas-destaque";
 
@@ -25,7 +25,7 @@ export default function Home() {
       <QuemSomos />
       <AtletasDestaque atletas={atletas} />
       <ComoFunciona />
-      <PlanosResumo />
+      <Servicos />
       <TecnicosOlheiros />
       <Diferenciais />
       <CtaFinal />
