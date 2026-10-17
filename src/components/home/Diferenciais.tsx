@@ -1,29 +1,39 @@
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
+import { Icone, type NomeIcone } from "@/components/ui/Icone";
+import { Revelar, RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
 
-const DIFERENCIAIS = [
-  "Atendimento próximo e humanizado",
-  "Estratégias personalizadas",
-  "Gestão de imagem esportiva",
-  "Produção de conteúdo profissional",
-  "Organização de perfil",
-  "Desenvolvimento de identidade visual",
-  "Planejamento estratégico de conteúdo",
-  "Equipe comprometida com a evolução do atleta",
-] as const;
+const DIFERENCIAIS: readonly { icone: NomeIcone; texto: string }[] = [
+  { icone: "conversa", texto: "Atendimento próximo e humanizado" },
+  { icone: "alvo", texto: "Estratégias personalizadas" },
+  { icone: "escudo", texto: "Gestão de imagem esportiva" },
+  { icone: "video", texto: "Produção de conteúdo profissional" },
+  { icone: "perfil", texto: "Organização de perfil" },
+  { icone: "pincel", texto: "Desenvolvimento de identidade visual" },
+  { icone: "calendario", texto: "Planejamento estratégico de conteúdo" },
+  { icone: "evolucao", texto: "Equipe comprometida com a evolução do atleta" },
+];
 
 export function Diferenciais() {
   return (
     <section className="secao secao--escura" aria-labelledby="diferenciais">
       <FundoEsportivo tipo="quadra" />
       <div className="container">
-        <h2 id="diferenciais" className="titulo-secao">
-          Diferenciais <span className="destaque">VMD</span>
-        </h2>
-        <ul className="lista-check">
+        <Revelar>
+          <p className="eyebrow">Por que a VMD</p>
+          <h2 id="diferenciais" className="titulo-secao">
+            Diferenciais <span className="destaque">VMD</span>
+          </h2>
+        </Revelar>
+        <RevelarGrupo as="ul" className="diferenciais">
           {DIFERENCIAIS.map((d) => (
-            <li key={d}>{d}</li>
+            <RevelarItem as="li" key={d.texto} className="diferencial holofote">
+              <span className="icone-caixa">
+                <Icone nome={d.icone} />
+              </span>
+              {d.texto}
+            </RevelarItem>
           ))}
-        </ul>
+        </RevelarGrupo>
       </div>
     </section>
   );

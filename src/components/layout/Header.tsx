@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ProgressoRolagem } from "@/components/layout/ProgressoRolagem";
+import { ButtonLink } from "@/components/ui/Button";
 import { NAV_PUBLICA, SITE } from "@/constants/site";
 
 export function Header() {
@@ -44,8 +46,12 @@ export function Header() {
               );
             })}
           </ul>
+          <ButtonLink href="/cadastro" className="btn--sm header__cta">
+            Quero ser VMD
+          </ButtonLink>
         </nav>
       </div>
+      <ProgressoRolagem />
     </header>
   );
 }

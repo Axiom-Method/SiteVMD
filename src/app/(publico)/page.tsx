@@ -3,10 +3,12 @@ import { AtletasDestaque } from "@/components/home/AtletasDestaque";
 import { ComoFunciona } from "@/components/home/ComoFunciona";
 import { CtaFinal } from "@/components/home/CtaFinal";
 import { Diferenciais } from "@/components/home/Diferenciais";
+import { FaixaLetreiro } from "@/components/home/FaixaLetreiro";
 import { Hero } from "@/components/home/Hero";
 import { QuemSomos } from "@/components/home/QuemSomos";
 import { Servicos } from "@/components/home/Servicos";
 import { TecnicosOlheiros } from "@/components/home/TecnicosOlheiros";
+import { Holofote } from "@/components/ui/Holofote";
 import { ATLETAS_DESTAQUE } from "@/constants/atletas-destaque";
 
 export const metadata: Metadata = {
@@ -21,7 +23,9 @@ export default function Home() {
 
   return (
     <>
+      <Holofote />
       <Hero />
+      <FaixaLetreiro />
       <QuemSomos />
       <AtletasDestaque atletas={atletas} />
       <ComoFunciona />
