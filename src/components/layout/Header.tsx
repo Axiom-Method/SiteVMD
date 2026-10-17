@@ -44,9 +44,6 @@ export function Header() {
               );
             })}
           </ul>
-          <Link href="/cadastro" className="btn btn--primario btn--sm">
-            Cadastre-se
-          </Link>
         </nav>
       </div>
     </header>
