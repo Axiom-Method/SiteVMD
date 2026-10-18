@@ -22,6 +22,10 @@ export type VideoDestaque = {
   data: string;
   duracao: string;
   thumb?: string;
+  /** Onde o vídeo está hospedado (só players permitidos na CSP; ver security/video-url.ts). */
+  provedor?: "youtube" | "vimeo";
+  /** ID do vídeo no provedor. Sem ID, o player mostra "vídeo em breve". */
+  videoId?: string;
 };
 
 export type NoticiaResumo = {

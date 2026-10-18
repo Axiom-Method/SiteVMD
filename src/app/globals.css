@@ -662,3 +662,114 @@ body::after {
 .trofeu-3d::before { content: ""; position: absolute; inset: 10% 15%; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, rgba(232, 85, 15, .45), transparent); filter: blur(10px); }
 .trofeu-3d--pronto { opacity: 1; scale: 1; }
 .trofeu-3d canvas { display: block; }
+
+/* ===================== Perfil do atleta (/atletas/[slug]) ===================== */
+.perfil__voltar { display: inline-flex; align-items: center; gap: .5rem; margin-bottom: 2rem; font-family: var(--fonte-titulo); font-weight: 600; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(242, 240, 239, .7); transition: color .2s ease; }
+.perfil__voltar:hover { color: var(--laranja-2); }
+.perfil__grade { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(2.5rem, 6vw, 5rem); align-items: center; }
+.perfil__nome { font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 600; line-height: 1.02; }
+.perfil__clube { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-top: .9rem; color: rgba(242, 240, 239, .78); font-weight: 700; }
+.perfil__sigla { padding: .2rem .55rem; border-radius: 4px; background: var(--laranja); color: var(--preto); font-family: var(--fonte-titulo); font-weight: 600; font-size: .78rem; letter-spacing: .1em; }
+.perfil__bio { margin-top: 1.25rem; max-width: 36rem; font-size: 1.05rem; color: rgba(242, 240, 239, .84); }
+.perfil__aviso { margin-top: 1rem; font-size: .85rem; color: rgba(242, 240, 239, .55); }
+.perfil__info .acoes { margin-top: 2rem; }
+@media (max-width: 900px) { .perfil__grade { grid-template-columns: 1fr; } }
+
+/* Ficha técnica */
+.ficha { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; margin: 2rem 0 0; border: 1px solid var(--borda); border-radius: var(--raio); overflow: hidden; background: var(--borda); }
+.ficha__item { padding: .9rem 1rem; background: #1a1a1a; }
+.ficha dt { font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(242, 240, 239, .55); }
+.ficha dd { margin: .2rem 0 0; font-family: var(--fonte-titulo); font-weight: 600; font-size: 1.15rem; }
+
+.conquistas { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
+.conquistas li { display: inline-flex; align-items: center; gap: .45rem; padding: .4rem .85rem; border: 1px solid rgba(232, 85, 15, .45); border-radius: 999px; background: rgba(232, 85, 15, .1); font-size: .85rem; font-weight: 700; }
+.conquistas li::before { content: "★"; color: var(--laranja-2); }
+
+/* ----- Card estilo FIFA ----- */
+/* Formato de escudo: o mesmo polígono na moldura (laranja) e na face (escura), recuada */
+.card-fifa-cena { display: grid; place-items: center; perspective: 1400px; }
+.card-fifa-gira {
+  perspective: 1000px; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .6)) drop-shadow(0 0 30px rgba(232, 85, 15, .25));
+  animation: card-entra 1.3s var(--ease-premium) .1s backwards;
+}
+@keyframes card-entra { from { opacity: 0; transform: rotateY(-110deg) scale(.85); } }
+.card-fifa {
+  --forma: polygon(50% 0, 86% 3.5%, 100% 11%, 100% 85%, 50% 100%, 0 85%, 0 11%, 14% 3.5%);
+  position: relative; width: min(330px, 78vw); aspect-ratio: 33 / 47; padding: 6px;
+  clip-path: var(--forma);
+  background: linear-gradient(145deg, #f7a24a, var(--laranja) 35%, #8f2f05 60%, var(--laranja-2) 85%, #f9c084);
+}
+.card-fifa__face {
+  position: relative; isolation: isolate; width: 100%; height: 100%; overflow: hidden; clip-path: var(--forma); color: var(--gelo);
+  background:
+    radial-gradient(ellipse 70% 45% at 60% 28%, rgba(232, 85, 15, .55), transparent 70%),
+    linear-gradient(170deg, #2c2c2c 0%, #151515 55%, #0b0b0b 100%);
+}
+/* Malha geométrica de fundo (a mesma das seções) */
+.card-fifa__face::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("/malhas/malha-a.svg") 60% 20% / 160% no-repeat; opacity: .35; }
+.card-fifa__topo { position: absolute; left: 11%; top: 12%; z-index: 2; display: grid; justify-items: center; gap: .15rem; font-family: var(--fonte-titulo); font-weight: 600; line-height: 1; }
+.card-fifa__geral { font-size: clamp(2.4rem, 11vw, 3.3rem); background: linear-gradient(180deg, #ffd0a0, var(--laranja-2) 45%, var(--laranja)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.card-fifa__posicao { font-size: 1.05rem; letter-spacing: .06em; }
+.card-fifa__divisor { width: 1.8rem; height: 1px; margin: .35rem 0; background: rgba(242, 240, 239, .35); }
+.card-fifa__pais { font-size: .8rem; letter-spacing: .1em; color: rgba(242, 240, 239, .8); }
+.card-fifa__clube { display: grid; place-items: center; width: 34px; height: 34px; margin-top: .35rem; border-radius: 50%; border: 1.5px solid var(--laranja-2); font-size: .72rem; color: var(--laranja-2); }
+/* Foto ampliada para mostrar o busto (cabeça e tronco), dissolvendo antes do nome */
+.card-fifa__foto {
+  position: absolute; right: -1%; top: 3%; width: 120%; height: auto; max-width: none;
+  filter: drop-shadow(0 0 1.5px rgba(234, 131, 38, .9)) drop-shadow(0 8px 16px rgba(0, 0, 0, .5));
+  -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 62%); mask-image: linear-gradient(to bottom, #000 48%, transparent 62%);
+}
+.card-fifa__iniciais { position: absolute; right: 12%; top: 18%; font-family: var(--fonte-titulo); font-size: 5rem; color: rgba(242, 240, 239, .25); }
+.card-fifa__nome {
+  position: absolute; left: 10%; right: 10%; top: 58%; z-index: 2; padding-bottom: .4rem; text-align: center;
+  font-family: var(--fonte-titulo); font-weight: 600; font-size: clamp(1.1rem, 5vw, 1.45rem); text-transform: uppercase; letter-spacing: .04em;
+  border-bottom: 1px solid; border-image: linear-gradient(90deg, transparent, var(--laranja), transparent) 1;
+}
+.card-fifa__atributos { position: absolute; left: 17%; right: 13%; top: 67.5%; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: .1rem 1.2rem; margin: 0; font-family: var(--fonte-titulo); }
+.card-fifa__atributos div { display: flex; align-items: baseline; gap: .45rem; }
+.card-fifa__atributos dd { order: -1; margin: 0; font-weight: 600; font-size: 1.1rem; color: var(--laranja-2); }
+.card-fifa__atributos dt { font-size: .8rem; letter-spacing: .08em; color: rgba(242, 240, 239, .85); }
+.card-fifa__marca { position: absolute; left: 50%; bottom: 3.2%; translate: -50% 0; font-family: var(--fonte-titulo); font-weight: 600; font-style: italic; font-size: .8rem; letter-spacing: .2em; color: rgba(242, 240, 239, .55); }
+/* Reflexo que atravessa o card de tempos em tempos */
+.card-fifa__reflexo { position: absolute; inset: -20% auto -20% 0; z-index: 3; width: 40%; pointer-events: none; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .22), transparent); transform: translateX(-160%) skewX(-18deg); animation: card-reflexo 6s ease-in-out 1.8s infinite; }
+@keyframes card-reflexo { 0% { transform: translateX(-160%) skewX(-18deg); } 25%, 100% { transform: translateX(330%) skewX(-18deg); } }
+/* Brilho do mouse (holofote) mais forte no card */
+.card-fifa.holofote::after { z-index: 4; background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 196, 140, .28), transparent 70%); }
+
+/* ----- Números da temporada e atributos ----- */
+.perfil__numeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2.5rem, 6vw, 5rem); }
+@media (max-width: 900px) { .perfil__numeros { grid-template-columns: 1fr; } }
+.numeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 2rem 0 0; }
+.numero { padding: 1.4rem 1.25rem; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie); box-shadow: var(--brilho-topo); }
+.numero dt { font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(242, 240, 239, .6); }
+.numero dd { margin: .35rem 0 0; font-family: var(--fonte-titulo); font-weight: 600; font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1; color: var(--laranja); font-variant-numeric: tabular-nums; }
+.atributos { display: grid; gap: 1.1rem; margin-top: 2rem; }
+.atributo { display: grid; grid-template-columns: 8.5rem 1fr 2.5rem; align-items: center; gap: 1rem; }
+.atributo__nome { font-weight: 700; font-size: .95rem; }
+.atributo__trilho { position: relative; height: 8px; border-radius: 999px; background: rgba(242, 240, 239, .08); overflow: hidden; }
+.atributo__barra { position: absolute; inset: 0 auto 0 0; border-radius: inherit; transform-origin: 0 50%; background: linear-gradient(90deg, var(--laranja), var(--laranja-2)); box-shadow: 0 0 12px rgba(232, 85, 15, .6); }
+.atributo__valor { font-family: var(--fonte-titulo); font-weight: 600; font-size: 1.15rem; text-align: right; color: var(--laranja-2); font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) { .atributo { grid-template-columns: 7.8rem 1fr 2rem; gap: .6rem; } .atributo__nome { font-size: .88rem; } }
+
+/* ----- Vídeos do atleta ----- */
+#videos .filtros__grupo { margin-top: 2.5rem; }
+.video__botao { width: 100%; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.video__botao > span { display: block; }
+.video__botao .video__meta { display: flex; }
+.video__botao:hover .midia { border-color: rgba(232, 85, 15, .7); transform: translateY(-4px); box-shadow: var(--brilho-topo), var(--sombra-quente); }
+.video__botao:hover .midia__play { transform: scale(1.08); background: var(--laranja-2); }
+
+/* Player em janela (<dialog>) */
+.player { width: min(980px, 94vw); max-width: none; padding: 0; border: 0; background: transparent; color: var(--gelo); overflow: visible; }
+.player::backdrop { background: rgba(8, 8, 8, .86); backdrop-filter: blur(6px); }
+.player[open] { animation: player-abre .35s var(--ease-premium); }
+@keyframes player-abre { from { opacity: 0; transform: translateY(16px) scale(.98); } }
+.player__topo { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .75rem; }
+.player__titulo { font-family: var(--fonte-titulo); font-weight: 600; font-size: 1.1rem; }
+.player__fechar { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--borda-forte); background: rgba(24, 24, 24, .8); color: var(--gelo); cursor: pointer; transition: border-color .2s ease, background .2s ease; }
+.player__fechar:hover { border-color: var(--laranja); background: var(--laranja); color: var(--preto); }
+.player__fechar svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.player__quadro { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--raio); border: 1px solid rgba(232, 85, 15, .5); background: #000; box-shadow: var(--sombra-quente); }
+.player__quadro iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.player__vazio { position: absolute; inset: 0; display: grid; place-items: center; padding: 1.5rem; text-align: center; color: rgba(242, 240, 239, .7); }
+.player__meta { margin-top: .75rem; font-size: .85rem; color: rgba(242, 240, 239, .65); }
