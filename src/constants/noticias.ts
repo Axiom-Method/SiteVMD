@@ -33,7 +33,13 @@ export type NoticiaResumo = {
   titulo: string;
   data: string;
   imagem?: string;
+  /** Parágrafos do texto. Sem corpo, a página mostra um texto provisório. */
+  corpo?: readonly string[];
 };
+
+export function buscarNoticia(slug: string): NoticiaResumo | undefined {
+  return NOTICIAS.find((n) => n.slug === slug);
+}
 
 export const VIDEO_SEMANA: VideoDestaque = {
   id: "destaque-semana",

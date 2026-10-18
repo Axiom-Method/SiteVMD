@@ -151,6 +151,10 @@ export function buscarPerfil(slug: string): PerfilAtleta | undefined {
   return { ...resumo, ...extra, videos: videosDe(slug) };
 }
 
+export function listarPerfis(): PerfilAtleta[] {
+  return ATLETAS_DESTAQUE.map((a) => buscarPerfil(a.slug)).filter((p): p is PerfilAtleta => !!p);
+}
+
 export function slugsDosPerfis(): string[] {
   return ATLETAS_DESTAQUE.map((a) => a.slug).filter((s) => s in EXTRAS);
 }

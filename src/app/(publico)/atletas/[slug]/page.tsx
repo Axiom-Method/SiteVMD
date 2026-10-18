@@ -5,6 +5,7 @@ import { CardFifa } from "@/components/atletas/CardFifa";
 import { BarrasAtributos, NumerosTemporada } from "@/components/atletas/Estatisticas";
 import { GaleriaVideos } from "@/components/atletas/GaleriaVideos";
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
+import { DadosEstruturados } from "@/components/seo/DadosEstruturados";
 import { ButtonLink } from "@/components/ui/Button";
 import { Holofote } from "@/components/ui/Holofote";
 import { Icone } from "@/components/ui/Icone";
@@ -23,6 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: atleta.nome,
     description: `${atleta.nome}, ${atleta.posicao.toLowerCase()} ${atleta.categoria} do ${atleta.clube}. Perfil, números e vídeos.`,
+    alternates: { canonical: `/atletas/${atleta.slug}` },
+    openGraph: { type: "profile", title: `${atleta.nome} | VMD` },
   };
 }
 
@@ -46,6 +49,17 @@ export default async function PerfilAtletaPage({ params }: Props) {
 
   return (
     <>
+      <DadosEstruturados
+        dados={{
+          "@type": "Person",
+          name: atleta.nome,
+          description: atleta.bio,
+          jobTitle: `${atleta.posicao} (${atleta.categoria})`,
+          height: { "@type": "QuantitativeValue", value: atleta.alturaCm, unitCode: "CMT" },
+          nationality: atleta.nacionalidade,
+          memberOf: { "@type": "SportsTeam", name: atleta.clube, sport: "Futebol" },
+        }}
+      />
       <Holofote />
 
       {/* Card + ficha */}

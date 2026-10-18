@@ -59,6 +59,9 @@ export function Footer() {
         <p>
           © {new Date().getFullYear()} {SITE.nome} {SITE.descricao}. Todos os direitos reservados.
         </p>
+        <Link href="/privacidade" className="footer__legal">
+          Política de Privacidade
+        </Link>
       </div>
     </footer>
   );

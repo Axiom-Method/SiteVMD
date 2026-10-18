@@ -8,11 +8,15 @@ import { Hero } from "@/components/home/Hero";
 import { QuemSomos } from "@/components/home/QuemSomos";
 import { Servicos } from "@/components/home/Servicos";
 import { TecnicosOlheiros } from "@/components/home/TecnicosOlheiros";
+import { DadosEstruturados } from "@/components/seo/DadosEstruturados";
 import { Holofote } from "@/components/ui/Holofote";
 import { ATLETAS_DESTAQUE } from "@/constants/atletas-destaque";
+import { SITE } from "@/constants/site";
 
 export const metadata: Metadata = {
-  title: "VMD | Assessoria & Marketing Esportivo",
+  // absolute: sem o sufixo "| VMD" do template (o título já começa com a marca)
+  title: { absolute: "VMD | Assessoria & Marketing Esportivo" },
+  alternates: { canonical: "/" },
   description:
     "Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas. Conectamos atletas a técnicos e olheiros.",
 };
@@ -23,6 +27,15 @@ export default function Home() {
 
   return (
     <>
+      <DadosEstruturados
+        dados={{
+          "@type": "Organization",
+          name: "VMD Assessoria & Marketing Esportivo",
+          url: process.env.APP_URL ?? "http://localhost:3000",
+          description: "Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas.",
+          contactPoint: { "@type": "ContactPoint", telephone: `+${SITE.whatsapp}`, contactType: "customer service", availableLanguage: "Portuguese" },
+        }}
+      />
       <Holofote />
       <Hero />
       <FaixaLetreiro />

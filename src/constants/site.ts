@@ -3,9 +3,8 @@ export const SITE = {
   descricao: "Assessoria & Marketing Esportivo",
   // Deixe vazio para não renderizar o link no rodapé.
   instagram: "",
-  // TODO: número do WhatsApp comercial, só dígitos com DDI + DDD (ex.: "5511999999999").
-  // Vazio, o link abre o WhatsApp para o visitante escolher o contato.
-  whatsapp: "",
+  // WhatsApp comercial: só dígitos, com DDI (55) + DDD.
+  whatsapp: "5521984579102",
 } as const;
 
 /** Link do WhatsApp comercial com uma mensagem já preenchida. */
