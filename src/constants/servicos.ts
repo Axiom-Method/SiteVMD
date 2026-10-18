@@ -1,9 +1,12 @@
+import type { NomeIcone } from "@/components/ui/Icone";
+
 /**
  * Serviços oferecidos pela VMD, agrupados por área.
  * Não há preço fixo: o valor é definido em orçamento, conforme modalidade, cliente e serviço.
  */
 export type GrupoServicos = {
   titulo: string;
+  icone: NomeIcone;
   itens: readonly string[];
 };
 
@@ -19,6 +22,7 @@ export const PUBLICO_SERVICOS = [
 export const SERVICOS: readonly GrupoServicos[] = [
   {
     titulo: "Artes e conteúdo",
+    icone: "imagem",
     itens: [
       "Artes e materiais para partidas e competições",
       "Artes para patrocinadores e campanhas",
@@ -28,6 +32,7 @@ export const SERVICOS: readonly GrupoServicos[] = [
   },
   {
     titulo: "Divulgação e imprensa",
+    icone: "megafone",
     itens: [
       "Conteúdos para divulgação de atletas e equipes",
       "Conteúdo para matérias e notícias esportivas",
@@ -37,6 +42,7 @@ export const SERVICOS: readonly GrupoServicos[] = [
   },
   {
     titulo: "Imagem e carreira",
+    icone: "maleta",
     itens: [
       "Currículos e materiais de apresentação para atletas, técnicos e profissionais do esporte",
       "Identidade visual exclusiva",

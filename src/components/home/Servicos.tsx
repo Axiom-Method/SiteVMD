@@ -1,7 +1,10 @@
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { ButtonLink } from "@/components/ui/Button";
+import { Icone } from "@/components/ui/Icone";
+import { Revelar, RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
 import { PUBLICO_SERVICOS, SERVICOS } from "@/constants/servicos";
 import { linkWhatsApp } from "@/constants/site";
+import { PalavraFundo } from "@/components/ui/PalavraFundo";
 
 const MENSAGEM_ORCAMENTO = "Olá! Vim pelo site da VMD e gostaria de solicitar um orçamento.";
 
@@ -9,40 +12,45 @@ const MENSAGEM_ORCAMENTO = "Olá! Vim pelo site da VMD e gostaria de solicitar u
 export function Servicos() {
   return (
     <section id="servicos" className="secao secao--escura" aria-labelledby="servicos-titulo">
+      <PalavraFundo>Serviços</PalavraFundo>
       <FundoEsportivo tipo="area" />
       <div className="container servicos">
-        <div className="servicos__intro">
+        {/* Fica fixa ao lado dos cards no desktop: o CTA continua à vista enquanto a lista rola */}
+        <Revelar className="servicos__intro">
+          <p className="eyebrow">O que fazemos</p>
           <h2 id="servicos-titulo" className="titulo-secao">
             Nossos <span className="destaque">serviços</span>
           </h2>
-          <p className="subtitulo">
-            Muito além de artes: comunicação completa para quem vive o esporte.
-          </p>
+          <p className="subtitulo">Muito além de artes: comunicação completa para quem vive o esporte.</p>
           <ul className="servicos__publico" aria-label="Para quem trabalhamos">
             {PUBLICO_SERVICOS.map((p) => (
               <li key={p}>{p}</li>
             ))}
           </ul>
-          <p className="servicos__preco">
-            Sem preço fixo: o valor é definido conforme a sua necessidade.
-          </p>
-          <ButtonLink href={linkWhatsApp(MENSAGEM_ORCAMENTO)} className="servicos__cta">
+          <p className="servicos__preco">Sem preço fixo: o valor é definido conforme a sua necessidade.</p>
+          <ButtonLink href={linkWhatsApp(MENSAGEM_ORCAMENTO)} className="servicos__cta btn--seta">
             Solicitar orçamento
+            <Icone nome="seta" className="btn__seta" />
           </ButtonLink>
-        </div>
+        </Revelar>
 
-        <div className="servicos__grupos">
+        <RevelarGrupo className="servicos__grupos">
           {SERVICOS.map((grupo) => (
-            <div key={grupo.titulo} className="servicos__grupo">
-              <h3 className="servicos__titulo">{grupo.titulo}</h3>
-              <ul className="lista-check servicos__lista">
+            <RevelarItem key={grupo.titulo} className="servico holofote inclina inclina--suave">
+              <div className="servico__topo">
+                <span className="icone-caixa">
+                  <Icone nome={grupo.icone} />
+                </span>
+                <h3 className="servico__titulo">{grupo.titulo}</h3>
+              </div>
+              <ul className="lista-check servico__lista">
                 {grupo.itens.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
-            </div>
+            </RevelarItem>
           ))}
-        </div>
+        </RevelarGrupo>
       </div>
     </section>
   );
