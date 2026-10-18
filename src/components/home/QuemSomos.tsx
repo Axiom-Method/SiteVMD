@@ -1,6 +1,7 @@
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { Icone, type NomeIcone } from "@/components/ui/Icone";
 import { Revelar, RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
+import { PalavraFundo } from "@/components/ui/PalavraFundo";
 
 /** Os três pilares da proposta (os mesmos da Hero): ocupam a coluna sob o título. */
 const PILARES: readonly { icone: NomeIcone; titulo: string; texto: string }[] = [
@@ -12,6 +13,7 @@ const PILARES: readonly { icone: NomeIcone; titulo: string; texto: string }[] = 
 export function QuemSomos() {
   return (
     <section className="secao" aria-labelledby="quem-somos">
+      <PalavraFundo lado="direita">Propósito</PalavraFundo>
       <FundoEsportivo tipo="campo" />
       <div className="container duas-colunas">
         <div className="quem-somos__lado">

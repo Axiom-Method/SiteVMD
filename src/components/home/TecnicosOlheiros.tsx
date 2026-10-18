@@ -2,10 +2,12 @@ import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icone } from "@/components/ui/Icone";
 import { Revelar } from "@/components/ui/Revelar";
+import { PalavraFundo } from "@/components/ui/PalavraFundo";
 
 export function TecnicosOlheiros() {
   return (
     <section className="secao" aria-labelledby="tecnicos">
+      <PalavraFundo lado="direita">Olheiros</PalavraFundo>
       <FundoEsportivo tipo="rastro" />
       <Revelar className="container caixa">
         <div>

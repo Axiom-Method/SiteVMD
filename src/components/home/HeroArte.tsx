@@ -10,7 +10,7 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 /**
  * Arte da Hero em camadas com profundidade:
@@ -26,6 +26,31 @@ const FAISCAS = Array.from({ length: 18 }, (_, i) => ({
   duracao: 5 + ((i * 1.3) % 4),
   tamanho: 2 + (i % 3),
 }));
+
+/** Palavra gigante do pôster: cada letra sobe da base, em sequência. */
+const PALAVRA = ["V", "M", "D"];
+
+/**
+ * Pôster em duas cópias com o mesmo layout: a de trás mostra só a palavra (o atleta passa na frente),
+ * a da frente mostra só os textos (ficam por cima do atleta, como nas referências).
+ */
+function Poster({ frente = false }: { frente?: boolean }) {
+  return (
+    <div className={frente ? "hero__poster hero__poster--frente" : "hero__poster"}>
+      <span className="hero__poster-sobre">
+        Seu jogo <span className="hero__poster-selo">Temp. 26</span>
+      </span>
+      <span className="hero__marca">
+        {PALAVRA.map((letra, i) => (
+          <span key={i} style={{ "--i": i } as CSSProperties}>
+            {letra}
+          </span>
+        ))}
+      </span>
+      <span className="hero__poster-sob">Em outro nível</span>
+    </div>
+  );
+}
 
 type Camada = { profundidade: number; rolagem: number; children: ReactNode };
 
@@ -83,9 +108,9 @@ export function HeroArte() {
 
   return (
     <div ref={ref} className="hero__arte" aria-hidden="true">
-      {/* De trás para frente: marca VMD, contraluz, atleta e faíscas */}
+      {/* De trás para frente: pôster (palavra gigante fatiada), contraluz, atleta, faíscas e rastros */}
       <CamadaParallax {...camada} profundidade={-6} rolagem={180}>
-        <span className="hero__marca">VMD</span>
+        <Poster />
       </CamadaParallax>
       <CamadaParallax {...camada} profundidade={12} rolagem={60}>
         <span className="hero__luz" />
@@ -93,6 +118,17 @@ export function HeroArte() {
           <Image className="hero__atleta" src="/images/hero-atleta.webp" alt="" width={1237} height={1271} priority sizes="(max-width: 820px) 100vw, 68vw" />
         </div>
       </CamadaParallax>
+      {/* Rastros de velocidade em diagonal, na frente do atleta (como as faixas da pista nos pôsteres) */}
+      <div className="hero__rastros">
+        <span />
+        <span />
+        <span />
+      </div>
+      {/* Textos do pôster na frente do atleta (mesmo movimento da palavra, que fica atrás) */}
+      <CamadaParallax {...camada} profundidade={-6} rolagem={180}>
+        <Poster frente />
+      </CamadaParallax>
+      <span className="hero__vertical">‹ Imagem · Posicionamento · Valor ›</span>
       <div className="hero__faiscas">
         {FAISCAS.map((f, i) => (
           <span

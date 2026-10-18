@@ -4,6 +4,7 @@ import { Icone } from "@/components/ui/Icone";
 import { Revelar, RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
 import { PUBLICO_SERVICOS, SERVICOS } from "@/constants/servicos";
 import { linkWhatsApp } from "@/constants/site";
+import { PalavraFundo } from "@/components/ui/PalavraFundo";
 
 const MENSAGEM_ORCAMENTO = "Olá! Vim pelo site da VMD e gostaria de solicitar um orçamento.";
 
@@ -11,6 +12,7 @@ const MENSAGEM_ORCAMENTO = "Olá! Vim pelo site da VMD e gostaria de solicitar u
 export function Servicos() {
   return (
     <section id="servicos" className="secao secao--escura" aria-labelledby="servicos-titulo">
+      <PalavraFundo>Serviços</PalavraFundo>
       <FundoEsportivo tipo="area" />
       <div className="container servicos">
         {/* Fica fixa ao lado dos cards no desktop: o CTA continua à vista enquanto a lista rola */}

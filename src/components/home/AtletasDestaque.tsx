@@ -3,10 +3,12 @@ import { CarrosselAtletas } from "@/components/home/CarrosselAtletas";
 import { ButtonLink } from "@/components/ui/Button";
 import type { AtletaResumo } from "@/constants/atletas-destaque";
 import { Revelar } from "@/components/ui/Revelar";
+import { PalavraFundo } from "@/components/ui/PalavraFundo";
 
 export function AtletasDestaque({ atletas }: { atletas: readonly AtletaResumo[] }) {
   return (
     <section className="secao secao--escura secao--carrossel" aria-labelledby="atletas-destaque">
+      <PalavraFundo>Elenco</PalavraFundo>
       <FundoEsportivo tipo="pista" />
       <div className="container">
         <Revelar>

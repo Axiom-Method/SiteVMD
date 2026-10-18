@@ -1,6 +1,7 @@
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { Icone, type NomeIcone } from "@/components/ui/Icone";
 import { Revelar, RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
+import { PalavraFundo } from "@/components/ui/PalavraFundo";
 
 const DIFERENCIAIS: readonly { icone: NomeIcone; texto: string }[] = [
   { icone: "conversa", texto: "Atendimento próximo e humanizado" },
@@ -16,6 +17,7 @@ const DIFERENCIAIS: readonly { icone: NomeIcone; texto: string }[] = [
 export function Diferenciais() {
   return (
     <section className="secao secao--escura" aria-labelledby="diferenciais">
+      <PalavraFundo>Diferencial</PalavraFundo>
       <FundoEsportivo tipo="quadra" />
       <div className="container">
         <Revelar>

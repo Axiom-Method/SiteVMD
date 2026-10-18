@@ -1,5 +1,6 @@
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { Revelar, RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
+import { PalavraFundo } from "@/components/ui/PalavraFundo";
 
 const PASSOS = [
   { titulo: "Cadastro", texto: "Preencha seus dados e envie as informações do atleta (com autorização do responsável, se menor de 18 anos)." },
@@ -10,6 +11,7 @@ const PASSOS = [
 export function ComoFunciona() {
   return (
     <section className="secao" aria-labelledby="como-funciona">
+      <PalavraFundo lado="direita">Método</PalavraFundo>
       <FundoEsportivo tipo="raias" />
       <div className="container">
         <Revelar>
