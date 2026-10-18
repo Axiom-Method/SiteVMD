@@ -9,9 +9,9 @@ const MENSAGEM_CONTATO = "Olá! Vim pelo site da VMD e quero saber como fortalec
 export function CtaFinal() {
   return (
     <section className="cta-final" aria-labelledby="cta-final">
-      <div className="container centro">
-        {/* Troféu 3D (WebGL): substitui o troféu em traço que ficava ao fundo */}
-        <Trofeu3DLazy />
+      {/* Taça 3D (WebGL) ao fundo, atrás do texto */}
+      <Trofeu3DLazy />
+      <div className="container centro cta-final__conteudo">
         <Revelar>
           <p className="eyebrow">Próximo passo</p>
           <h2 id="cta-final" className="titulo-secao">
