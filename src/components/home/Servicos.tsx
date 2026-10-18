@@ -34,7 +34,7 @@ export function Servicos() {
 
         <RevelarGrupo className="servicos__grupos">
           {SERVICOS.map((grupo) => (
-            <RevelarItem key={grupo.titulo} className="servico holofote">
+            <RevelarItem key={grupo.titulo} className="servico holofote inclina inclina--suave">
               <div className="servico__topo">
                 <span className="icone-caixa">
                   <Icone nome={grupo.icone} />

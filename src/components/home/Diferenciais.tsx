@@ -26,7 +26,7 @@ export function Diferenciais() {
         </Revelar>
         <RevelarGrupo as="ul" className="diferenciais">
           {DIFERENCIAIS.map((d) => (
-            <RevelarItem as="li" key={d.texto} className="diferencial holofote">
+            <RevelarItem as="li" key={d.texto} className="diferencial holofote inclina">
               <span className="icone-caixa">
                 <Icone nome={d.icone} />
               </span>

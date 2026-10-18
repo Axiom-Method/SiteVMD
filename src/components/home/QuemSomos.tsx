@@ -23,7 +23,7 @@ export function QuemSomos() {
           </Revelar>
           <RevelarGrupo as="ul" className="pilares">
             {PILARES.map((p) => (
-              <RevelarItem as="li" key={p.titulo} className="pilar holofote">
+              <RevelarItem as="li" key={p.titulo} className="pilar holofote inclina">
                 <span className="pilar__icone">
                   <Icone nome={p.icone} />
                 </span>

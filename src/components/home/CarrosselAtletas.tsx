@@ -85,7 +85,7 @@ export function CarrosselAtletas({ atletas }: { atletas: readonly AtletaResumo[]
         {itens.map(({ atleta: a, copia, clone }) => (
           // Cópias só existem para o loop: ficam fora da árvore de acessibilidade e do Tab
           <li key={`${copia}-${a.slug}`} className="carrossel__item" aria-hidden={clone || undefined}>
-            <Link href={`/atletas/${a.slug}`} className="atleta-foto" tabIndex={clone ? -1 : undefined}>
+            <Link href={`/atletas/${a.slug}`} className="atleta-foto inclina inclina--suave" tabIndex={clone ? -1 : undefined}>
               {a.foto ? (
                 <Image src={a.foto} alt="" fill sizes="(max-width: 640px) 84vw, 940px" className="atleta-foto__img" />
               ) : (

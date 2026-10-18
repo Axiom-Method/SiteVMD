@@ -20,7 +20,7 @@ export function ComoFunciona() {
         </Revelar>
         <RevelarGrupo as="ol" className="passos">
           {PASSOS.map((p, i) => (
-            <RevelarItem as="li" key={p.titulo} className="passo holofote">
+            <RevelarItem as="li" key={p.titulo} className="passo holofote inclina">
               {/* Número + trilho até o próximo passo (o trilho some no último) */}
               <span className="passo__numero" aria-hidden="true">
                 {String(i + 1).padStart(2, "0")}
