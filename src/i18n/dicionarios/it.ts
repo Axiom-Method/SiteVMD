@@ -39,17 +39,67 @@ export const it: Dicionario = {
   },
 
   hero: {
-    eyebrow: "Procura e Marketing Sportivo",
-    linhas: ["Trasformiamo", "la presenza digitale in", "posizionamento", "professionale"],
-    lead: "Consulenza specializzata nel rafforzare l'immagine, il posizionamento e il valore degli atleti.",
-    cta: "Entra in VMD",
-    conhecerAtletas: "Scopri gli atleti",
+    carrossel: "In evidenza su VMD",
+    slideRotulo: "slide",
+    slideDe: "{n} di {total}",
+    anterior: "Slide precedente",
+    proximo: "Slide successiva",
+    irPara: "Vai alla slide {n}: {nome}",
     rolarRotulo: "Scorri alla sezione successiva",
     rolar: "Scorri",
     posterSobre: "Il tuo gioco",
     posterSelo: "Stag. 26",
     posterSob: "A un altro livello",
-    vertical: "‹ Immagine · Posizionamento · Valore ›",
+    slides: [
+      {
+        nome: "VMD",
+        palavra: "VMD",
+        eyebrow: "Procura e Marketing Sportivo",
+        titulo: ["Trasformiamo", "la presenza digitale in"],
+        destaque: ["posizionamento", "professionale"],
+        lead: "Consulenza specializzata nel rafforzare l'immagine, il posizionamento e il valore degli atleti.",
+        ctas: [
+          { texto: "Entra in VMD", href: "/cadastro" },
+          { texto: "Scopri gli atleti", href: "/atletas" },
+        ],
+      },
+      {
+        nome: "Immagine",
+        palavra: "IMMAGINE",
+        eyebrow: "Immagine",
+        titulo: ["Il tuo talento,"],
+        destaque: ["presentato", "al meglio"],
+        lead: "Foto, video, identità visiva e media kit che mostrano fuori dal campo il livello che esprimi in campo.",
+        ctas: [
+          { texto: "Vedi i servizi", href: "/#servicos" },
+          { texto: "Entra in VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Posizionamento",
+        palavra: "FOCUS",
+        eyebrow: "Posizionamento",
+        titulo: ["Fatti notare"],
+        destaque: ["da chi", "conta"],
+        lead: "Strategia di contenuti e presenza digitale per arrivare ad allenatori, osservatori, club e sponsor.",
+        ctas: [
+          { texto: "Come funziona", href: "/#como-funciona" },
+          { texto: "Entra in VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Atleti",
+        palavra: "ROSA",
+        eyebrow: "Per allenatori e osservatori",
+        titulo: ["Talenti pronti"],
+        destaque: ["per essere", "scoperti"],
+        lead: "Profili approvati da VMD, con numeri e video. Il contatto passa sempre da VMD.",
+        ctas: [
+          { texto: "Cerca atleti", href: "/atletas" },
+          { texto: "Vedi le notizie", href: "/noticias" },
+        ],
+      },
+    ],
   },
 
   letreiro: {

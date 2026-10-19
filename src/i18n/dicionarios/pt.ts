@@ -46,18 +46,71 @@ export const pt = {
   },
 
   hero: {
-    eyebrow: "Assessoria & Marketing Esportivo",
-    // As duas últimas linhas ficam em destaque (laranja)
-    linhas: ["Transformamos", "presença digital em", "posicionamento", "profissional"],
-    lead: "Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas.",
-    cta: "Quero ser VMD",
-    conhecerAtletas: "Conhecer os atletas",
+    carrossel: "Destaques da VMD",
+    slideRotulo: "slide",
+    slideDe: "{n} de {total}",
+    anterior: "Slide anterior",
+    proximo: "Próximo slide",
+    irPara: "Ir para o slide {n}: {nome}",
     rolarRotulo: "Rolar para a próxima seção",
     rolar: "Role",
     posterSobre: "Seu jogo",
     posterSelo: "Temp. 26",
     posterSob: "Em outro nível",
-    vertical: "‹ Imagem · Posicionamento · Valor ›",
+    /**
+     * Slides da Hero, na ordem. `palavra` é a palavra gigante do pôster (quanto mais curta, maior).
+     * O título tem as linhas normais e as em destaque (laranja). O primeiro slide traz o <h1> da Home.
+     */
+    slides: [
+      {
+        nome: "VMD",
+        palavra: "VMD",
+        eyebrow: "Assessoria & Marketing Esportivo",
+        titulo: ["Transformamos", "presença digital em"],
+        destaque: ["posicionamento", "profissional"],
+        lead: "Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas.",
+        ctas: [
+          { texto: "Quero ser VMD", href: "/cadastro" },
+          { texto: "Conhecer os atletas", href: "/atletas" },
+        ],
+      },
+      {
+        nome: "Imagem",
+        palavra: "IMAGEM",
+        eyebrow: "Imagem",
+        titulo: ["Seu talento,"],
+        destaque: ["bem", "apresentado"],
+        lead: "Fotos, vídeos, identidade visual e media kit que mostram fora de campo o nível que você entrega dentro dele.",
+        ctas: [
+          { texto: "Ver serviços", href: "/#servicos" },
+          { texto: "Quero ser VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Posicionamento",
+        palavra: "FOCO",
+        eyebrow: "Posicionamento",
+        titulo: ["Seja visto"],
+        destaque: ["por quem", "importa"],
+        lead: "Estratégia de conteúdo e presença digital para chegar a técnicos, olheiros, clubes e patrocinadores.",
+        ctas: [
+          { texto: "Como funciona", href: "/#como-funciona" },
+          { texto: "Quero ser VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Atletas",
+        palavra: "ELENCO",
+        eyebrow: "Para técnicos e olheiros",
+        titulo: ["Talentos prontos"],
+        destaque: ["para serem", "descobertos"],
+        lead: "Perfis aprovados pela VMD, com números e vídeos. O contato é sempre intermediado pela VMD.",
+        ctas: [
+          { texto: "Buscar atletas", href: "/atletas" },
+          { texto: "Ver notícias", href: "/noticias" },
+        ],
+      },
+    ],
   },
 
   letreiro: {

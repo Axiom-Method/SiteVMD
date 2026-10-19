@@ -39,17 +39,67 @@ export const es: Dicionario = {
   },
 
   hero: {
-    eyebrow: "Representación y Marketing Deportivo",
-    linhas: ["Transformamos", "la presencia digital en", "posicionamiento", "profesional"],
-    lead: "Asesoría especializada en fortalecer la imagen, el posicionamiento y el valor de los atletas.",
-    cta: "Quiero ser VMD",
-    conhecerAtletas: "Conocer a los atletas",
+    carrossel: "Destacados de VMD",
+    slideRotulo: "diapositiva",
+    slideDe: "{n} de {total}",
+    anterior: "Diapositiva anterior",
+    proximo: "Siguiente diapositiva",
+    irPara: "Ir a la diapositiva {n}: {nome}",
     rolarRotulo: "Desplazarse a la siguiente sección",
     rolar: "Desliza",
     posterSobre: "Tu juego",
     posterSelo: "Temp. 26",
     posterSob: "En otro nivel",
-    vertical: "‹ Imagen · Posicionamiento · Valor ›",
+    slides: [
+      {
+        nome: "VMD",
+        palavra: "VMD",
+        eyebrow: "Representación y Marketing Deportivo",
+        titulo: ["Transformamos", "la presencia digital en"],
+        destaque: ["posicionamiento", "profesional"],
+        lead: "Asesoría especializada en fortalecer la imagen, el posicionamiento y el valor de los atletas.",
+        ctas: [
+          { texto: "Quiero ser VMD", href: "/cadastro" },
+          { texto: "Conocer a los atletas", href: "/atletas" },
+        ],
+      },
+      {
+        nome: "Imagen",
+        palavra: "IMAGEN",
+        eyebrow: "Imagen",
+        titulo: ["Tu talento,"],
+        destaque: ["bien", "presentado"],
+        lead: "Fotos, vídeos, identidad visual y media kit que muestran fuera del campo el nivel que das dentro de él.",
+        ctas: [
+          { texto: "Ver servicios", href: "/#servicos" },
+          { texto: "Quiero ser VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Posicionamiento",
+        palavra: "FOCO",
+        eyebrow: "Posicionamiento",
+        titulo: ["Que te vea"],
+        destaque: ["quien", "importa"],
+        lead: "Estrategia de contenido y presencia digital para llegar a entrenadores, ojeadores, clubes y patrocinadores.",
+        ctas: [
+          { texto: "Cómo funciona", href: "/#como-funciona" },
+          { texto: "Quiero ser VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Atletas",
+        palavra: "PLANTEL",
+        eyebrow: "Para entrenadores y ojeadores",
+        titulo: ["Talentos listos"],
+        destaque: ["para ser", "descubiertos"],
+        lead: "Perfiles aprobados por VMD, con números y vídeos. El contacto siempre se hace a través de VMD.",
+        ctas: [
+          { texto: "Buscar atletas", href: "/atletas" },
+          { texto: "Ver noticias", href: "/noticias" },
+        ],
+      },
+    ],
   },
 
   letreiro: {

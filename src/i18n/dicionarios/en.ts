@@ -39,17 +39,67 @@ export const en: Dicionario = {
   },
 
   hero: {
-    eyebrow: "Sports Management & Marketing",
-    linhas: ["We turn", "digital presence into", "professional", "positioning"],
-    lead: "Specialised management that strengthens athletes' image, positioning and value.",
-    cta: "Join VMD",
-    conhecerAtletas: "Meet the athletes",
+    carrossel: "VMD highlights",
+    slideRotulo: "slide",
+    slideDe: "{n} of {total}",
+    anterior: "Previous slide",
+    proximo: "Next slide",
+    irPara: "Go to slide {n}: {nome}",
     rolarRotulo: "Scroll to the next section",
     rolar: "Scroll",
     posterSobre: "Your game",
     posterSelo: "Season 26",
     posterSob: "On another level",
-    vertical: "‹ Image · Positioning · Value ›",
+    slides: [
+      {
+        nome: "VMD",
+        palavra: "VMD",
+        eyebrow: "Sports Management & Marketing",
+        titulo: ["We turn", "digital presence into"],
+        destaque: ["professional", "positioning"],
+        lead: "Specialised management that strengthens athletes' image, positioning and value.",
+        ctas: [
+          { texto: "Join VMD", href: "/cadastro" },
+          { texto: "Meet the athletes", href: "/atletas" },
+        ],
+      },
+      {
+        nome: "Image",
+        palavra: "IMAGE",
+        eyebrow: "Image",
+        titulo: ["Your talent,"],
+        destaque: ["presented", "right"],
+        lead: "Photos, videos, visual identity and a media kit that show off the pitch the level you deliver on it.",
+        ctas: [
+          { texto: "See services", href: "/#servicos" },
+          { texto: "Join VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Positioning",
+        palavra: "FOCUS",
+        eyebrow: "Positioning",
+        titulo: ["Get seen"],
+        destaque: ["by the people", "who matter"],
+        lead: "Content strategy and digital presence to reach coaches, scouts, clubs and sponsors.",
+        ctas: [
+          { texto: "How it works", href: "/#como-funciona" },
+          { texto: "Join VMD", href: "/cadastro" },
+        ],
+      },
+      {
+        nome: "Athletes",
+        palavra: "SQUAD",
+        eyebrow: "For coaches and scouts",
+        titulo: ["Talent ready"],
+        destaque: ["to be", "discovered"],
+        lead: "Profiles approved by VMD, with stats and videos. Contact always goes through VMD.",
+        ctas: [
+          { texto: "Search athletes", href: "/atletas" },
+          { texto: "See news", href: "/noticias" },
+        ],
+      },
+    ],
   },
 
   letreiro: {
