@@ -1,30 +1,39 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CardFifa } from "@/components/atletas/CardFifa";
-import { BarrasAtributos, NumerosTemporada } from "@/components/atletas/Estatisticas";
+import { NumerosTemporada } from "@/components/atletas/Estatisticas";
 import { GaleriaVideos } from "@/components/atletas/GaleriaVideos";
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { DadosEstruturados } from "@/components/seo/DadosEstruturados";
 import { ButtonLink } from "@/components/ui/Button";
 import { Holofote } from "@/components/ui/Holofote";
 import { Icone } from "@/components/ui/Icone";
+import { Destaque } from "@/components/ui/Destaque";
 import { Revelar } from "@/components/ui/Revelar";
-import { buscarPerfil, SIGLA_POSICAO } from "@/constants/atletas-perfil";
+import { buscarPerfil } from "@/constants/atletas-perfil";
 import { linkWhatsApp } from "@/constants/site";
+import { alternativas } from "@/i18n/config";
+import { LinkIdioma } from "@/i18n/cliente";
+import { formatarNumero, preencher } from "@/i18n/formatar";
+import { obterTextos } from "@/i18n/servidor";
+import { siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
 
 type Props = { params: Promise<{ slug: string }> };
-
-const formatoAltura = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const atleta = buscarPerfil(slug);
-  if (!atleta) return { title: "Atleta não encontrado" };
+  const { idioma, t } = await obterTextos();
+  if (!atleta) return { title: t.perfil.naoEncontrado };
   return {
     title: atleta.nome,
-    description: `${atleta.nome}, ${atleta.posicao.toLowerCase()} ${atleta.categoria} do ${atleta.clube}. Perfil, números e vídeos.`,
-    alternates: { canonical: `/atletas/${atleta.slug}` },
+    description: preencher(t.perfil.metaDescricao, {
+      nome: atleta.nome,
+      posicao: traduzirValor(t, "posicoes", atleta.posicao).toLowerCase(),
+      categoria: traduzirCategoria(t, atleta.categoria),
+      clube: atleta.clube,
+    }),
+    alternates: alternativas(idioma, `/atletas/${atleta.slug}`),
     openGraph: { type: "profile", title: `${atleta.nome} | VMD` },
   };
 }
@@ -34,18 +43,22 @@ export default async function PerfilAtletaPage({ params }: Props) {
   // TODO: trocar por atletaService.buscarPublicado(slug) (só status PUBLICADO)
   const atleta = buscarPerfil(slug);
   if (!atleta) notFound();
+  const { idioma, t } = await obterTextos();
 
+  const posicao = traduzirValor(t, "posicoes", atleta.posicao);
+  const categoria = traduzirCategoria(t, atleta.categoria);
+  const altura = formatarNumero(atleta.alturaCm / 100, idioma, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const ficha = [
-    { rotulo: "Posição", valor: atleta.posicao },
-    { rotulo: "Categoria", valor: atleta.categoria },
-    { rotulo: "Camisa", valor: String(atleta.numero) },
-    { rotulo: "Altura", valor: `${formatoAltura.format(atleta.alturaCm / 100)} m` },
-    { rotulo: "Peso", valor: `${atleta.pesoKg} kg` },
-    { rotulo: "Pé dominante", valor: atleta.pe },
-    { rotulo: "Nacionalidade", valor: atleta.nacionalidade },
-    { rotulo: "Clube", valor: atleta.clube },
+    { rotulo: t.perfil.ficha.posicao, valor: posicao },
+    { rotulo: t.perfil.ficha.categoria, valor: categoria },
+    { rotulo: t.perfil.ficha.camisa, valor: String(atleta.numero) },
+    { rotulo: t.perfil.ficha.altura, valor: `${altura} m` },
+    { rotulo: t.perfil.ficha.peso, valor: `${atleta.pesoKg} kg` },
+    { rotulo: t.perfil.ficha.pe, valor: traduzirValor(t, "pe", atleta.pe) },
+    { rotulo: t.perfil.ficha.nacionalidade, valor: traduzirValor(t, "nacionalidades", atleta.nacionalidade) },
+    { rotulo: t.perfil.ficha.clube, valor: atleta.clube },
   ];
-  const mensagem = `Olá! Sou técnico/olheiro e tenho interesse no atleta ${atleta.nome} (${atleta.posicao}, ${atleta.categoria}). Vi o perfil no site da VMD.`;
+  const mensagem = preencher(t.perfil.mensagem, { nome: atleta.nome, posicao, categoria });
 
   return (
     <>
@@ -57,7 +70,7 @@ export default async function PerfilAtletaPage({ params }: Props) {
           jobTitle: `${atleta.posicao} (${atleta.categoria})`,
           height: { "@type": "QuantitativeValue", value: atleta.alturaCm, unitCode: "CMT" },
           nationality: atleta.nacionalidade,
-          memberOf: { "@type": "SportsTeam", name: atleta.clube, sport: "Futebol" },
+          memberOf: { "@type": "SportsTeam", name: atleta.clube, sport: atleta.esporte },
         }}
       />
       <Holofote />
@@ -66,22 +79,22 @@ export default async function PerfilAtletaPage({ params }: Props) {
       <section className="secao perfil" aria-labelledby="perfil-nome">
         <FundoEsportivo tipo="campo" />
         <div className="container">
-          <Link href="/atletas" className="perfil__voltar">
-            <span aria-hidden="true">←</span> Todos os atletas
-          </Link>
+          <LinkIdioma href="/atletas" className="perfil__voltar">
+            <span aria-hidden="true">←</span> {t.perfil.voltar}
+          </LinkIdioma>
           <div className="perfil__grade">
             <CardFifa atleta={atleta} />
 
             <Revelar className="perfil__info" atraso={0.2}>
               <p className="eyebrow">
-                {atleta.posicao} · {atleta.categoria}
+                {posicao} · {categoria}
               </p>
               <h1 id="perfil-nome" className="perfil__nome">
                 {atleta.nome}
               </h1>
               <p className="perfil__clube">
-                <span className="perfil__sigla">{SIGLA_POSICAO[atleta.posicao]}</span>
-                {atleta.clube} · Camisa {atleta.numero}
+                <span className="perfil__sigla">{siglaPosicao(t, atleta.posicao)}</span>
+                {atleta.clube} · {preencher(t.perfil.camisa, { n: atleta.numero })}
               </p>
               <p className="perfil__bio">{atleta.bio}</p>
 
@@ -95,7 +108,7 @@ export default async function PerfilAtletaPage({ params }: Props) {
               </dl>
 
               {atleta.conquistas.length > 0 && (
-                <ul className="conquistas" aria-label="Conquistas">
+                <ul className="conquistas" aria-label={t.perfil.conquistas}>
                   {atleta.conquistas.map((c) => (
                     <li key={c}>{c}</li>
                   ))}
@@ -104,41 +117,30 @@ export default async function PerfilAtletaPage({ params }: Props) {
 
               <div className="acoes">
                 <ButtonLink href={linkWhatsApp(mensagem)} className="btn--seta btn--brilho">
-                  Tenho interesse
+                  {t.perfil.interesse}
                   <Icone nome="seta" className="btn__seta" />
                 </ButtonLink>
                 <ButtonLink href="#videos" variant="contorno">
-                  Ver vídeos
+                  {t.perfil.verVideos}
                 </ButtonLink>
               </div>
-              <p className="perfil__aviso">O contato é intermediado pela VMD, que protege os dados do atleta.</p>
+              <p className="perfil__aviso">{t.perfil.aviso}</p>
             </Revelar>
           </div>
         </div>
       </section>
 
-      {/* Números da temporada + atributos */}
+      {/* Números da temporada (sem notas/atributos: o site não compara atletas por nota) */}
       <section className="secao secao--escura" aria-labelledby="numeros">
         <FundoEsportivo tipo="pista" />
-        <div className="container perfil__numeros">
-          <div>
-            <Revelar>
-              <p className="eyebrow">Temporada {atleta.temporada}</p>
-              <h2 id="numeros" className="titulo-secao titulo-secao--pequeno">
-                Números do <span className="destaque">atleta</span>
-              </h2>
-            </Revelar>
-            <NumerosTemporada estatisticas={atleta.estatisticas} />
-          </div>
-          <div>
-            <Revelar>
-              <p className="eyebrow">Avaliação técnica</p>
-              <h2 className="titulo-secao titulo-secao--pequeno">
-                Atributos <span className="destaque">{atleta.geral}</span>
-              </h2>
-            </Revelar>
-            <BarrasAtributos atributos={atleta.atributos} />
-          </div>
+        <div className="container">
+          <Revelar>
+            <p className="eyebrow">{preencher(t.perfil.temporada, { ano: atleta.temporada })}</p>
+            <h2 id="numeros" className="titulo-secao titulo-secao--pequeno">
+              <Destaque a={t.perfil.numerosA} b={t.perfil.numerosB} />
+            </h2>
+          </Revelar>
+          <NumerosTemporada estatisticas={atleta.estatisticas} />
         </div>
       </section>
 
@@ -147,9 +149,9 @@ export default async function PerfilAtletaPage({ params }: Props) {
         <FundoEsportivo tipo="raias" />
         <div className="container">
           <Revelar>
-            <p className="eyebrow">Gols e lances</p>
+            <p className="eyebrow">{t.perfil.videosEyebrow}</p>
             <h2 id="videos-titulo" className="titulo-secao">
-              Vídeos do <span className="destaque">atleta</span>
+              <Destaque a={t.perfil.videosA} b={t.perfil.videosB} />
             </h2>
           </Revelar>
           <GaleriaVideos videos={atleta.videos} />

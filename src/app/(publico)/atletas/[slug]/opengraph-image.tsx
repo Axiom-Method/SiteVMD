@@ -1,15 +1,19 @@
 import { ImageResponse } from "next/og";
-import { buscarPerfil, SIGLA_POSICAO } from "@/constants/atletas-perfil";
+import { buscarPerfil } from "@/constants/atletas-perfil";
+import { pt } from "@/i18n/dicionarios/pt";
+import { obterTextos } from "@/i18n/servidor";
+import { siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
 
-/** Prévia do perfil ao compartilhar: card do atleta com nota, posição e números. */
-export const alt = "Perfil do atleta na VMD";
+/** Prévia do perfil ao compartilhar: card do atleta com posição e números, no idioma da página. */
+export const alt = pt.perfil.imagemAlt;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function ImagemAtleta({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const atleta = buscarPerfil(slug);
-  const nome = atleta?.nome ?? "Atleta VMD";
+  const { t } = await obterTextos();
+  const nome = atleta?.nome ?? t.perfil.atletaPadrao;
 
   return new ImageResponse(
     (
@@ -41,14 +45,15 @@ export default async function ImagemAtleta({ params }: { params: Promise<{ slug:
             background: "linear-gradient(170deg, #2c2c2c, #0b0b0b)",
           }}
         >
-          <div style={{ display: "flex", fontSize: 130, fontWeight: 800, color: "#ea8326", lineHeight: 1  }}>{atleta?.geral ?? "—"}</div>
-          <div style={{ display: "flex", fontSize: 44, fontWeight: 700, marginTop: 10  }}>{atleta ? SIGLA_POSICAO[atleta.posicao] : ""}</div>
+          <div style={{ display: "flex", fontSize: 110, fontWeight: 800, color: "#ea8326", lineHeight: 1  }}>{atleta ? siglaPosicao(t, atleta.posicao) : "—"}</div>
           <div style={{ display: "flex", fontSize: 26, color: "#bbb", marginTop: 30, letterSpacing: 6, fontStyle: "italic"  }}>VMD</div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <div style={{ display: "flex", fontSize: 28, color: "#ea8326", letterSpacing: 6  }}>
-            {atleta ? `${atleta.posicao.toUpperCase()} · ${atleta.categoria.toUpperCase()}` : "ATLETA"}
+            {atleta
+              ? `${traduzirValor(t, "posicoes", atleta.posicao).toUpperCase()} · ${traduzirCategoria(t, atleta.categoria).toUpperCase()}`
+              : t.perfil.atleta.toUpperCase()}
           </div>
           <div style={{ display: "flex", fontSize: 78, fontWeight: 800, lineHeight: 1.05, marginTop: 16  }}>{nome.toUpperCase()}</div>
           <div style={{ display: "flex", fontSize: 32, color: "#ccc", marginTop: 14  }}>{atleta?.clube ?? ""}</div>
@@ -57,7 +62,7 @@ export default async function ImagemAtleta({ params }: { params: Promise<{ slug:
               {atleta.estatisticas.slice(0, 3).map((e) => (
                 <div key={e.rotulo} style={{ display: "flex", flexDirection: "column" }}>
                   <span style={{ fontSize: 64, fontWeight: 800, color: "#e8550f", lineHeight: 1 }}>{e.valor}</span>
-                  <span style={{ fontSize: 22, color: "#aaa", marginTop: 6 }}>{e.rotulo}</span>
+                  <span style={{ fontSize: 22, color: "#aaa", marginTop: 6 }}>{traduzirValor(t, "estatisticas", e.rotulo)}</span>
                 </div>
               ))}
             </div>

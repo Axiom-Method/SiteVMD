@@ -1,6 +1,5 @@
 export const SITE = {
   nome: "VMD",
-  descricao: "Assessoria & Marketing Esportivo",
   // Deixe vazio para não renderizar o link no rodapé.
   instagram: "",
   // WhatsApp comercial: só dígitos, com DDI (55) + DDD.
@@ -13,9 +12,10 @@ export function linkWhatsApp(mensagem: string): string {
 }
 
 // O login é só da administração: não aparece na navegação pública.
+// `chave` aponta para o texto em t.nav (i18n/dicionarios).
 export const NAV_PUBLICA = [
-  { href: "/", rotulo: "Home" },
-  { href: "/atletas", rotulo: "Atletas" },
-  { href: "/#servicos", rotulo: "Serviços" },
-  { href: "/noticias", rotulo: "Notícias" },
+  { href: "/", chave: "home" },
+  { href: "/atletas", chave: "atletas" },
+  { href: "/#servicos", chave: "servicos" },
+  { href: "/noticias", chave: "noticias" },
 ] as const;

@@ -2,13 +2,9 @@
  * MOCK temporário da página de notícias.
  * Substituir por video.service.ts e noticia.service.ts (somente itens com status PUBLICADO).
  */
-export type TipoDestaque = "gol" | "lance" | "melhores-momentos";
-
-export const ROTULO_TIPO: Record<TipoDestaque, string> = {
-  gol: "Gol",
-  lance: "Lance",
-  "melhores-momentos": "Melhores momentos",
-};
+/** Tipos de vídeo; o texto de cada um fica em t.videos.tipos (i18n/dicionarios). */
+export const TIPOS_DESTAQUE = ["gol", "lance", "melhores-momentos"] as const;
+export type TipoDestaque = (typeof TIPOS_DESTAQUE)[number];
 
 export type VideoDestaque = {
   id: string;

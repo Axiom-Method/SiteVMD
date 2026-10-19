@@ -1,16 +1,18 @@
 "use client";
 
-import { animate, m, useInView, useReducedMotion } from "motion/react";
+import { animate, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef } from "react";
-import type { Atributo, Estatistica } from "@/constants/atletas-perfil";
-
-const formato = new Intl.NumberFormat("pt-BR");
+import type { Estatistica } from "@/constants/atletas-perfil";
+import { useTextos } from "@/i18n/cliente";
+import { formatarNumero } from "@/i18n/formatar";
+import { traduzirValor } from "@/i18n/valores";
 
 /**
  * Número que conta do zero até o valor quando entra na tela.
  * O HTML do servidor já traz o valor final (funciona sem JavaScript e para buscadores).
  */
 function Contador({ valor }: { valor: number }) {
+  const { idioma } = useTextos();
   const ref = useRef<HTMLSpanElement>(null);
   const visivel = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
   const reduzir = useReducedMotion();
@@ -26,49 +28,26 @@ function Contador({ valor }: { valor: number }) {
     const controle = animate(0, valor, {
       duration: 1.6,
       ease: [0.16, 1, 0.3, 1],
-      onUpdate: (v) => (el.textContent = formato.format(Math.round(v))),
+      onUpdate: (v) => (el.textContent = formatarNumero(Math.round(v), idioma)),
     });
     return () => controle.stop();
-  }, [visivel, reduzir, valor]);
+  }, [visivel, reduzir, valor, idioma]);
 
-  return <span ref={ref}>{formato.format(valor)}</span>;
+  return <span ref={ref}>{formatarNumero(valor, idioma)}</span>;
 }
 
 export function NumerosTemporada({ estatisticas }: { estatisticas: readonly Estatistica[] }) {
+  const { t } = useTextos();
   return (
     <dl className="numeros">
       {estatisticas.map((e) => (
         <div key={e.rotulo} className="numero holofote">
-          <dt>{e.rotulo}</dt>
+          <dt>{traduzirValor(t, "estatisticas", e.rotulo)}</dt>
           <dd>
             <Contador valor={e.valor} />
           </dd>
         </div>
       ))}
     </dl>
-  );
-}
-
-/** Barras de atributos: preenchem da esquerda para a direita ao entrar na tela. */
-export function BarrasAtributos({ atributos }: { atributos: readonly Atributo[] }) {
-  return (
-    <ul className="atributos">
-      {atributos.map((a, i) => (
-        <li key={a.sigla} className="atributo">
-          <span className="atributo__nome">{a.nome}</span>
-          <span className="atributo__trilho" aria-hidden="true">
-            <m.span
-              className="atributo__barra"
-              style={{ width: `${a.valor}%` }}
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-              transition={{ duration: 1.1, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-            />
-          </span>
-          <span className="atributo__valor">{a.valor}</span>
-        </li>
-      ))}
-    </ul>
   );
 }

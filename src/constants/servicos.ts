@@ -1,53 +1,8 @@
 import type { NomeIcone } from "@/components/ui/Icone";
 
 /**
- * Serviços oferecidos pela VMD, agrupados por área.
+ * Ícones dos grupos de serviços, na ordem de t.servicos.grupos (i18n/dicionarios).
+ * Os textos (grupos, itens e para quem a VMD trabalha) ficam nos dicionários de cada idioma.
  * Não há preço fixo: o valor é definido em orçamento, conforme modalidade, cliente e serviço.
  */
-export type GrupoServicos = {
-  titulo: string;
-  icone: NomeIcone;
-  itens: readonly string[];
-};
-
-/** Quem a VMD atende: o serviço não se limita a atletas. */
-export const PUBLICO_SERVICOS = [
-  "Atletas",
-  "Técnicos",
-  "Profissionais do esporte",
-  "Clubes e equipes",
-  "Organizações esportivas",
-] as const;
-
-export const SERVICOS: readonly GrupoServicos[] = [
-  {
-    titulo: "Artes e conteúdo",
-    icone: "imagem",
-    itens: [
-      "Artes e materiais para partidas e competições",
-      "Artes para patrocinadores e campanhas",
-      "Produção de vídeos",
-      "Media day",
-    ],
-  },
-  {
-    titulo: "Divulgação e imprensa",
-    icone: "megafone",
-    itens: [
-      "Conteúdos para divulgação de atletas e equipes",
-      "Conteúdo para matérias e notícias esportivas",
-      "Materiais de divulgação e comunicação para clubes, equipes e organizações esportivas",
-      "Posicionamento digital",
-    ],
-  },
-  {
-    titulo: "Imagem e carreira",
-    icone: "maleta",
-    itens: [
-      "Currículos e materiais de apresentação para atletas, técnicos e profissionais do esporte",
-      "Identidade visual exclusiva",
-      "Media kit profissional",
-      "Preparação para entrevistas",
-    ],
-  },
-] as const;
+export const ICONES_SERVICOS: readonly NomeIcone[] = ["imagem", "megafone", "maleta"];

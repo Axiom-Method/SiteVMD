@@ -1,9 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Icone } from "@/components/ui/Icone";
 import { linkWhatsApp } from "@/constants/site";
+import { IDIOMA_PADRAO, NOME_IDIOMA, type Idioma } from "@/i18n/config";
+import { LinkIdioma, useTextos } from "@/i18n/cliente";
+import type { Dicionario } from "@/i18n/dicionarios";
+import { preencher } from "@/i18n/formatar";
+import { traduzirValor } from "@/i18n/valores";
 import { formatarData } from "@/lib/utils";
 import {
   cadastroAtletaSchema,
@@ -17,6 +21,8 @@ import {
 /**
  * Cadastro "Quero ser VMD": valida no navegador e abre o WhatsApp da VMD com os dados preenchidos.
  * O site não grava nada; quem envia a mensagem é o próprio visitante, pelo WhatsApp dele.
+ * A tela segue o idioma do site; a mensagem para a VMD fica sempre em português (é a equipe que lê),
+ * com o idioma do visitante indicado no fim.
  */
 
 type Campos = Omit<CadastroAtletaEntrada, "consentimento"> & { consentimento: boolean };
@@ -45,7 +51,7 @@ const ORDEM: (keyof Campos)[] = [
   "instagram", "linkVideo", "mensagem", "responsavelNome", "autorizacaoResponsavel", "consentimento",
 ];
 
-function montarMensagem(d: CadastroAtleta): string {
+function montarMensagem(d: CadastroAtleta, idioma: Idioma): string {
   const idade = idadeEm(d.dataNascimento);
   const linhas = [
     "*Cadastro de atleta - site VMD*",
@@ -64,8 +70,14 @@ function montarMensagem(d: CadastroAtleta): string {
     idade < 18 && `*Responsável:* ${d.responsavelNome} (autorizou o cadastro)`,
     "",
     "Li e concordo com a Política de Privacidade da VMD.",
+    idioma !== IDIOMA_PADRAO && `*Idioma do site:* ${NOME_IDIOMA[idioma]}`,
   ];
   return linhas.filter((l) => l !== false && l !== undefined).join("\n");
+}
+
+/** Código de erro do schema (validations/atleta.schema.ts) → texto no idioma da página. */
+function mensagemDeErro(t: Dicionario, codigo: string): string {
+  return codigo in t.cadastro.erros ? t.cadastro.erros[codigo as keyof Dicionario["cadastro"]["erros"]] : codigo;
 }
 
 function Campo({
@@ -76,6 +88,7 @@ function Campo({
   opcional,
   children,
   largo,
+  textoOpcional,
 }: {
   id: string;
   rotulo: string;
@@ -84,12 +97,13 @@ function Campo({
   opcional?: boolean;
   largo?: boolean;
   children: ReactNode;
+  textoOpcional: string;
 }) {
   return (
     <div className={`campo${largo ? " campo--largo" : ""}${erro ? " campo--erro" : ""}`}>
       <label htmlFor={id}>
         {rotulo}
-        {opcional && <span className="campo__opcional"> (opcional)</span>}
+        {opcional && <span className="campo__opcional"> {textoOpcional}</span>}
       </label>
       {children}
       {dica && !erro && (
@@ -107,6 +121,7 @@ function Campo({
 }
 
 export function FormCadastro() {
+  const { idioma, t } = useTextos();
   const [campos, setCampos] = useState<Campos>(INICIAL);
   const [erros, setErros] = useState<Erros>({});
   const [linkEnviado, setLinkEnviado] = useState<string | null>(null);
@@ -135,7 +150,7 @@ export function FormCadastro() {
       const novos: Erros = {};
       for (const issue of r.error.issues) {
         const campo = issue.path[0] as keyof Campos;
-        novos[campo] ??= issue.message;
+        novos[campo] ??= mensagemDeErro(t, issue.message);
       }
       setErros(novos);
       const primeiro = ORDEM.find((c) => novos[c]);
@@ -143,7 +158,7 @@ export function FormCadastro() {
       return;
     }
     setErros({});
-    const url = linkWhatsApp(montarMensagem(r.data));
+    const url = linkWhatsApp(montarMensagem(r.data, idioma));
     window.open(url, "_blank", "noopener,noreferrer");
     setLinkEnviado(url);
     requestAnimationFrame(() => resumo.current?.focus());
@@ -157,18 +172,17 @@ export function FormCadastro() {
         <span className="icone-caixa">
           <Icone nome="check" />
         </span>
-        <h2>Quase lá!</h2>
+        <h2>{t.cadastro.sucessoTitulo}</h2>
         <p>
-          Abrimos o WhatsApp da VMD com os seus dados já preenchidos. É só <strong>enviar a mensagem</strong> por lá para
-          concluir o cadastro.
+          {t.cadastro.sucessoA} <strong>{t.cadastro.sucessoDestaque}</strong> {t.cadastro.sucessoB}
         </p>
         <div className="acoes">
           <a href={linkEnviado} target="_blank" rel="noopener noreferrer" className="btn btn--primario btn--seta">
-            Abrir o WhatsApp de novo
+            {t.cadastro.abrirDeNovo}
             <Icone nome="seta" className="btn__seta" />
           </a>
           <button type="button" className="btn btn--contorno" onClick={() => setLinkEnviado(null)}>
-            Editar dados
+            {t.cadastro.editar}
           </button>
         </div>
       </div>
@@ -179,17 +193,17 @@ export function FormCadastro() {
     <form className="cadastro__form" onSubmit={enviar} noValidate>
       {totalErros > 0 && (
         <div className="cadastro__resumo" role="alert">
-          {totalErros === 1 ? "Há 1 campo para corrigir." : `Há ${totalErros} campos para corrigir.`}
+          {totalErros === 1 ? t.cadastro.umErro : preencher(t.cadastro.variosErros, { n: totalErros })}
         </div>
       )}
 
       <fieldset>
-        <legend>Dados do atleta</legend>
+        <legend>{t.cadastro.dadosAtleta}</legend>
         <div className="campos">
-          <Campo id="nome" rotulo="Nome completo" erro={erros.nome} largo>
+          <Campo textoOpcional={t.cadastro.opcional} id="nome" rotulo={t.cadastro.nome} erro={erros.nome} largo>
             <input {...aria("nome")} type="text" autoComplete="name" value={campos.nome} onChange={(e) => alterar("nome", e.target.value)} />
           </Campo>
-          <Campo id="dataNascimento" rotulo="Data de nascimento" erro={erros.dataNascimento} dica="Usada para definir a categoria.">
+          <Campo textoOpcional={t.cadastro.opcional} id="dataNascimento" rotulo={t.cadastro.nascimento} erro={erros.dataNascimento} dica={t.cadastro.nascimentoDica}>
             <input
               {...aria("dataNascimento", true)}
               type="date"
@@ -198,13 +212,13 @@ export function FormCadastro() {
               onChange={(e) => alterar("dataNascimento", e.target.value)}
             />
           </Campo>
-          <Campo id="alturaCm" rotulo="Altura (cm)" erro={erros.alturaCm} opcional>
+          <Campo textoOpcional={t.cadastro.opcional} id="alturaCm" rotulo={t.cadastro.altura} erro={erros.alturaCm} opcional>
             <input {...aria("alturaCm")} type="number" inputMode="numeric" min={100} max={230} placeholder="178" value={campos.alturaCm ?? ""} onChange={(e) => alterar("alturaCm", e.target.value)} />
           </Campo>
-          <Campo id="cidade" rotulo="Cidade" erro={erros.cidade}>
+          <Campo textoOpcional={t.cadastro.opcional} id="cidade" rotulo={t.cadastro.cidade} erro={erros.cidade}>
             <input {...aria("cidade")} type="text" autoComplete="address-level2" value={campos.cidade} onChange={(e) => alterar("cidade", e.target.value)} />
           </Campo>
-          <Campo id="uf" rotulo="Estado" erro={erros.uf}>
+          <Campo textoOpcional={t.cadastro.opcional} id="uf" rotulo={t.cadastro.estado} erro={erros.uf}>
             <select {...aria("uf")} value={campos.uf} onChange={(e) => alterar("uf", e.target.value as Campos["uf"])}>
               <option value="">Selecione</option>
               {UFS.map((uf) => (
@@ -218,37 +232,37 @@ export function FormCadastro() {
       </fieldset>
 
       <fieldset>
-        <legend>Esporte</legend>
+        <legend>{t.cadastro.esporte}</legend>
         <div className="campos">
-          <Campo id="modalidade" rotulo="Modalidade" erro={erros.modalidade}>
+          <Campo textoOpcional={t.cadastro.opcional} id="modalidade" rotulo={t.cadastro.modalidade} erro={erros.modalidade}>
             <select {...aria("modalidade")} value={campos.modalidade} onChange={(e) => alterar("modalidade", e.target.value as Campos["modalidade"])}>
               <option value="">Selecione</option>
               {MODALIDADES.map((m) => (
                 <option key={m} value={m}>
-                  {m}
+                  {traduzirValor(t, "modalidades", m)}
                 </option>
               ))}
             </select>
           </Campo>
-          <Campo id="posicao" rotulo="Posição" erro={erros.posicao} opcional>
-            <input {...aria("posicao")} type="text" placeholder="Ex.: atacante" value={campos.posicao ?? ""} onChange={(e) => alterar("posicao", e.target.value)} />
+          <Campo textoOpcional={t.cadastro.opcional} id="posicao" rotulo={t.cadastro.posicao} erro={erros.posicao} opcional>
+            <input {...aria("posicao")} type="text" placeholder={t.cadastro.posicaoExemplo} value={campos.posicao ?? ""} onChange={(e) => alterar("posicao", e.target.value)} />
           </Campo>
-          <Campo id="clube" rotulo="Clube ou equipe atual" erro={erros.clube} opcional largo>
+          <Campo textoOpcional={t.cadastro.opcional} id="clube" rotulo={t.cadastro.clube} erro={erros.clube} opcional largo>
             <input {...aria("clube")} type="text" value={campos.clube ?? ""} onChange={(e) => alterar("clube", e.target.value)} />
           </Campo>
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>Mídia e mensagem</legend>
+        <legend>{t.cadastro.midia}</legend>
         <div className="campos">
-          <Campo id="instagram" rotulo="Instagram" erro={erros.instagram} opcional>
-            <input {...aria("instagram")} type="text" placeholder="@seuperfil" autoCapitalize="none" value={campos.instagram ?? ""} onChange={(e) => alterar("instagram", e.target.value)} />
+          <Campo textoOpcional={t.cadastro.opcional} id="instagram" rotulo={t.cadastro.instagram} erro={erros.instagram} opcional>
+            <input {...aria("instagram")} type="text" placeholder={t.cadastro.instagramExemplo} autoCapitalize="none" value={campos.instagram ?? ""} onChange={(e) => alterar("instagram", e.target.value)} />
           </Campo>
-          <Campo id="linkVideo" rotulo="Link de um vídeo seu" erro={erros.linkVideo} dica="YouTube, Instagram, Drive..." opcional>
+          <Campo textoOpcional={t.cadastro.opcional} id="linkVideo" rotulo={t.cadastro.video} erro={erros.linkVideo} dica={t.cadastro.videoDica} opcional>
             <input {...aria("linkVideo", true)} type="url" inputMode="url" placeholder="https://" value={campos.linkVideo ?? ""} onChange={(e) => alterar("linkVideo", e.target.value)} />
           </Campo>
-          <Campo id="mensagem" rotulo="Conte um pouco sobre você e o que procura" erro={erros.mensagem} opcional largo>
+          <Campo textoOpcional={t.cadastro.opcional} id="mensagem" rotulo={t.cadastro.mensagem} erro={erros.mensagem} opcional largo>
             <textarea {...aria("mensagem")} rows={4} maxLength={600} value={campos.mensagem ?? ""} onChange={(e) => alterar("mensagem", e.target.value)} />
           </Campo>
         </div>
@@ -256,10 +270,10 @@ export function FormCadastro() {
 
       {menor && (
         <fieldset className="cadastro__responsavel">
-          <legend>Responsável legal</legend>
-          <p className="cadastro__aviso">Atletas menores de 18 anos precisam da autorização de um responsável.</p>
+          <legend>{t.cadastro.responsavel}</legend>
+          <p className="cadastro__aviso">{t.cadastro.responsavelAviso}</p>
           <div className="campos">
-            <Campo id="responsavelNome" rotulo="Nome do responsável" erro={erros.responsavelNome} largo>
+            <Campo textoOpcional={t.cadastro.opcional} id="responsavelNome" rotulo={t.cadastro.responsavelNome} erro={erros.responsavelNome} largo>
               <input {...aria("responsavelNome")} type="text" value={campos.responsavelNome ?? ""} onChange={(e) => alterar("responsavelNome", e.target.value)} />
             </Campo>
           </div>
@@ -270,7 +284,7 @@ export function FormCadastro() {
               checked={campos.autorizacaoResponsavel}
               onChange={(e) => alterar("autorizacaoResponsavel", e.target.checked)}
             />
-            <span>Sou o responsável legal e autorizo o cadastro do atleta.</span>
+            <span>{t.cadastro.responsavelAutoriza}</span>
           </label>
           {erros.autorizacaoResponsavel && (
             <p id="autorizacaoResponsavel-erro" className="campo__mensagem-erro">
@@ -283,11 +297,12 @@ export function FormCadastro() {
       <label className={`marcar${erros.consentimento ? " marcar--erro" : ""}`}>
         <input {...aria("consentimento")} type="checkbox" checked={campos.consentimento} onChange={(e) => alterar("consentimento", e.target.checked)} />
         <span>
-          Li e concordo com a{" "}
-          <Link href="/privacidade" target="_blank">
-            Política de Privacidade
-          </Link>
-          . Meus dados serão usados só para a VMD avaliar o perfil e entrar em contato.
+          {t.cadastro.consentimentoA}
+          {t.cadastro.consentimentoA.endsWith("'") ? "" : " "}
+          <LinkIdioma href="/privacidade" target="_blank">
+            {t.cadastro.consentimentoLink}
+          </LinkIdioma>
+          {t.cadastro.consentimentoB}
         </span>
       </label>
       {erros.consentimento && (
@@ -298,10 +313,10 @@ export function FormCadastro() {
 
       <div className="cadastro__enviar">
         <button type="submit" className="btn btn--primario btn--seta btn--brilho">
-          Enviar pelo WhatsApp
+          {t.cadastro.enviar}
           <Icone nome="conversa" className="btn__seta" />
         </button>
-        <p className="campo__dica">O envio abre o WhatsApp com seus dados preenchidos. Nada fica salvo no site.</p>
+        <p className="campo__dica">{t.cadastro.enviarDica}</p>
       </div>
     </form>
   );

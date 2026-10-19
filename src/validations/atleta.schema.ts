@@ -5,6 +5,9 @@ import { z } from "zod";
  * Hoje o envio é pelo WhatsApp da VMD (o site não guarda os dados); o mesmo schema
  * vale para a futura rota /api/cadastro quando houver banco.
  * Exposição mínima (LGPD): só o necessário para a VMD avaliar e fazer o orçamento.
+ *
+ * As mensagens de erro são códigos (ex.: "nomeObrigatorio"): o texto de cada idioma fica em
+ * t.cadastro.erros (i18n/dicionarios). Adicionou um código aqui? Adicione o texto nos dicionários.
  */
 export const MODALIDADES = ["Futebol", "Futsal", "Vôlei", "Basquete", "Handebol", "Outra"] as const;
 
@@ -25,23 +28,23 @@ const textoOpcional = (max: number) =>
   z
     .string()
     .trim()
-    .max(max, `Use no máximo ${max} caracteres.`)
+    .max(max, "textoLongo")
     .optional()
     .transform((v) => v || undefined);
 
 export const cadastroAtletaSchema = z
   .object({
-    nome: z.string().trim().min(3, "Informe o nome completo.").max(120, "Nome muito longo."),
+    nome: z.string().trim().min(3, "nomeObrigatorio").max(120, "nomeLongo"),
     dataNascimento: z
       .string()
-      .regex(/^\d{4}-\d{2}-\d{2}$/, "Informe a data de nascimento.")
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "nascimentoObrigatorio")
       .refine((v) => {
         const idade = idadeEm(v);
         return idade >= 6 && idade <= 50;
-      }, "Confira a data de nascimento."),
-    cidade: z.string().trim().min(2, "Informe a cidade.").max(80),
-    uf: z.enum(UFS, { errorMap: () => ({ message: "Selecione o estado." }) }),
-    modalidade: z.enum(MODALIDADES, { errorMap: () => ({ message: "Selecione a modalidade." }) }),
+      }, "nascimentoInvalido"),
+    cidade: z.string().trim().min(2, "cidadeObrigatoria").max(80, "textoLongo"),
+    uf: z.enum(UFS, { errorMap: () => ({ message: "estadoObrigatorio" }) }),
+    modalidade: z.enum(MODALIDADES, { errorMap: () => ({ message: "modalidadeObrigatoria" }) }),
     posicao: textoOpcional(60),
     clube: textoOpcional(80),
     alturaCm: z
@@ -49,13 +52,13 @@ export const cadastroAtletaSchema = z
       .trim()
       .optional()
       .transform((v) => (v ? Number(v) : undefined))
-      .refine((v) => v === undefined || (Number.isInteger(v) && v >= 100 && v <= 230), "Altura em centímetros, ex.: 178."),
+      .refine((v) => v === undefined || (Number.isInteger(v) && v >= 100 && v <= 230), "alturaInvalida"),
     instagram: z
       .string()
       .trim()
       .optional()
       .transform((v) => (v ? v.replace(/^@/, "") : undefined))
-      .refine((v) => v === undefined || /^[A-Za-z0-9._]{1,30}$/.test(v), "Use só o @ do perfil, ex.: @atleta."),
+      .refine((v) => v === undefined || /^[A-Za-z0-9._]{1,30}$/.test(v), "instagramInvalido"),
     linkVideo: z
       .string()
       .trim()
@@ -68,20 +71,20 @@ export const cadastroAtletaSchema = z
         } catch {
           return false;
         }
-      }, "Cole um link começando com https://"),
+      }, "videoInvalido"),
     mensagem: textoOpcional(600),
     responsavelNome: textoOpcional(120),
     autorizacaoResponsavel: z.boolean(),
-    consentimento: z.literal(true, { errorMap: () => ({ message: "É preciso concordar com a Política de Privacidade." }) }),
+    consentimento: z.literal(true, { errorMap: () => ({ message: "consentimentoObrigatorio" }) }),
   })
   .superRefine((d, ctx) => {
     // Menor de 18: exige responsável e a autorização dele
     if (idadeEm(d.dataNascimento) < 18) {
       if (!d.responsavelNome || d.responsavelNome.length < 3) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["responsavelNome"], message: "Informe o nome do responsável." });
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["responsavelNome"], message: "responsavelObrigatorio" });
       }
       if (!d.autorizacaoResponsavel) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["autorizacaoResponsavel"], message: "O responsável precisa autorizar o cadastro." });
+        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["autorizacaoResponsavel"], message: "autorizacaoObrigatoria" });
       }
     }
   });

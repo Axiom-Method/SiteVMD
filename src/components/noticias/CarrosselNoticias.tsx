@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CardNoticia } from "@/components/noticias/CardNoticia";
 import type { NoticiaResumo } from "@/constants/noticias";
+import { useTextos } from "@/i18n/cliente";
 
 const INTERVALO = 6000;
 
@@ -12,6 +13,7 @@ const INTERVALO = 6000;
  * Pausa com o mouse em cima, com foco dentro, com a aba oculta, pelo botão ou com "reduzir movimento".
  */
 export function CarrosselNoticias({ noticias }: { noticias: readonly NoticiaResumo[] }) {
+  const { t } = useTextos();
   const trilhoRef = useRef<HTMLUListElement>(null);
   const [inicio, setInicio] = useState(true);
   const [fim, setFim] = useState(false);
@@ -89,7 +91,7 @@ export function CarrosselNoticias({ noticias }: { noticias: readonly NoticiaResu
       className="carrossel-noticias"
       role="region"
       aria-roledescription="carrossel"
-      aria-label="Últimas notícias, da mais recente para a mais antiga"
+      aria-label={t.noticias.carrossel}
       onMouseEnter={() => setSuspenso(true)}
       onMouseLeave={() => setSuspenso(false)}
       onFocus={() => setSuspenso(true)}
@@ -103,7 +105,7 @@ export function CarrosselNoticias({ noticias }: { noticias: readonly NoticiaResu
             type="button"
             className="carrossel-noticias__botao"
             onClick={() => setPausado((p) => !p)}
-            aria-label={pausado ? "Retomar rolagem automática" : "Pausar rolagem automática"}
+            aria-label={pausado ? t.noticias.retomar : t.noticias.pausar}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               {pausado ? <path className="cheio" d="M8 5.5v13l10.5-6.5z" /> : <path d="M9 6v12M15 6v12" />}
@@ -115,7 +117,7 @@ export function CarrosselNoticias({ noticias }: { noticias: readonly NoticiaResu
           className="carrossel-noticias__botao"
           onClick={() => navegar(-1)}
           disabled={inicio}
-          aria-label="Notícias mais recentes"
+          aria-label={t.noticias.recentes}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M15 5l-7 7 7 7" />
@@ -126,7 +128,7 @@ export function CarrosselNoticias({ noticias }: { noticias: readonly NoticiaResu
           className="carrossel-noticias__botao"
           onClick={() => navegar(1)}
           disabled={fim}
-          aria-label="Notícias mais antigas"
+          aria-label={t.noticias.antigas}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 5l7 7-7 7" />

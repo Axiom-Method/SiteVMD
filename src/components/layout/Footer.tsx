@@ -1,45 +1,44 @@
-import Link from "next/link";
 import { ButtonLink } from "@/components/ui/Button";
 import { Icone } from "@/components/ui/Icone";
 import { linkWhatsApp, NAV_PUBLICA, SITE } from "@/constants/site";
+import { LinkIdioma } from "@/i18n/cliente";
+import { obterTextos } from "@/i18n/servidor";
 
-const MENSAGEM_CONTATO = "Olá! Vim pelo site da VMD e gostaria de mais informações.";
+export async function Footer() {
+  const { t } = await obterTextos();
 
-export function Footer() {
   return (
     <footer className="footer">
       <div className="container footer__grade">
         <div className="footer__marca">
           <p className="logo__marca">{SITE.nome}</p>
-          <p className="footer__texto">
-            Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas.
-          </p>
+          <p className="footer__texto">{t.rodape.texto}</p>
           <ButtonLink href="/cadastro" className="btn--sm">
-            Quero ser VMD
+            {t.nav.cta}
           </ButtonLink>
         </div>
 
         <nav aria-labelledby="rodape-navegacao">
           <p id="rodape-navegacao" className="footer__titulo">
-            Navegação
+            {t.rodape.navegacao}
           </p>
           <ul className="footer__links">
             {NAV_PUBLICA.map((item) => (
               <li key={item.href}>
-                <Link href={item.href}>{item.rotulo}</Link>
+                <LinkIdioma href={item.href}>{t.nav[item.chave]}</LinkIdioma>
               </li>
             ))}
             <li>
-              <Link href="/cadastro">Cadastro</Link>
+              <LinkIdioma href="/cadastro">{t.nav.cadastro}</LinkIdioma>
             </li>
           </ul>
         </nav>
 
         <div>
-          <p className="footer__titulo">Contato</p>
+          <p className="footer__titulo">{t.rodape.contato}</p>
           <ul className="footer__links">
             <li>
-              <a href={linkWhatsApp(MENSAGEM_CONTATO)} target="_blank" rel="noopener noreferrer" className="footer__contato">
+              <a href={linkWhatsApp(t.rodape.mensagemWhats)} target="_blank" rel="noopener noreferrer" className="footer__contato">
                 <Icone nome="conversa" />
                 WhatsApp
               </a>
@@ -57,11 +56,11 @@ export function Footer() {
       </div>
       <div className="container footer__copy">
         <p>
-          © {new Date().getFullYear()} {SITE.nome} {SITE.descricao}. Todos os direitos reservados.
+          © {new Date().getFullYear()} {SITE.nome} {t.meta.descricaoMarca}. {t.rodape.direitos}
         </p>
-        <Link href="/privacidade" className="footer__legal">
-          Política de Privacidade
-        </Link>
+        <LinkIdioma href="/privacidade" className="footer__legal">
+          {t.rodape.privacidade}
+        </LinkIdioma>
       </div>
     </footer>
   );

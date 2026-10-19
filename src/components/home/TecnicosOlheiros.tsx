@@ -3,25 +3,25 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icone } from "@/components/ui/Icone";
 import { Revelar } from "@/components/ui/Revelar";
 import { PalavraFundo } from "@/components/ui/PalavraFundo";
+import { Destaque } from "@/components/ui/Destaque";
+import { obterTextos } from "@/i18n/servidor";
 
-export function TecnicosOlheiros() {
+export async function TecnicosOlheiros() {
+  const { t } = await obterTextos();
   return (
     <section className="secao" aria-labelledby="tecnicos">
-      <PalavraFundo lado="direita">Olheiros</PalavraFundo>
+      <PalavraFundo lado="direita">{t.tecnicos.fundo}</PalavraFundo>
       <FundoEsportivo tipo="rastro" />
       <Revelar className="container caixa">
         <div>
-          <p className="eyebrow">Busca de talentos</p>
+          <p className="eyebrow">{t.tecnicos.eyebrow}</p>
           <h2 id="tecnicos" className="titulo-secao titulo-secao--pequeno">
-            É técnico ou <span className="destaque">olheiro?</span>
+            <Destaque a={t.tecnicos.tituloA} b={t.tecnicos.tituloB} />
           </h2>
-          <p>
-            Encontre atletas por posição, categoria e clube. O contato com o atleta é feito por meio da VMD, que
-            intermedia a conversa e protege os dados de cada perfil.
-          </p>
+          <p>{t.tecnicos.texto}</p>
         </div>
         <ButtonLink href="/atletas" className="btn--seta">
-          Buscar atletas
+          {t.tecnicos.cta}
           <Icone nome="busca" className="btn__seta" />
         </ButtonLink>
       </Revelar>

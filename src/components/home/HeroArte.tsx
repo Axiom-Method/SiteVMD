@@ -11,6 +11,7 @@ import {
   type MotionValue,
 } from "motion/react";
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useTextos } from "@/i18n/cliente";
 
 /**
  * Arte da Hero em camadas com profundidade:
@@ -35,10 +36,11 @@ const PALAVRA = ["V", "M", "D"];
  * a da frente mostra só os textos (ficam por cima do atleta, como nas referências).
  */
 function Poster({ frente = false }: { frente?: boolean }) {
+  const { t } = useTextos();
   return (
     <div className={frente ? "hero__poster hero__poster--frente" : "hero__poster"}>
       <span className="hero__poster-sobre">
-        Seu jogo <span className="hero__poster-selo">Temp. 26</span>
+        {t.hero.posterSobre} <span className="hero__poster-selo">{t.hero.posterSelo}</span>
       </span>
       <span className="hero__marca">
         {PALAVRA.map((letra, i) => (
@@ -47,7 +49,7 @@ function Poster({ frente = false }: { frente?: boolean }) {
           </span>
         ))}
       </span>
-      <span className="hero__poster-sob">Em outro nível</span>
+      <span className="hero__poster-sob">{t.hero.posterSob}</span>
     </div>
   );
 }
@@ -73,6 +75,7 @@ function CamadaParallax({
 }
 
 export function HeroArte() {
+  const { t } = useTextos();
   const ref = useRef<HTMLDivElement>(null);
   const reduzir = useReducedMotion();
 
@@ -128,7 +131,7 @@ export function HeroArte() {
       <CamadaParallax {...camada} profundidade={-6} rolagem={180}>
         <Poster frente />
       </CamadaParallax>
-      <span className="hero__vertical">‹ Imagem · Posicionamento · Valor ›</span>
+      <span className="hero__vertical">{t.hero.vertical}</span>
       <div className="hero__faiscas">
         {FAISCAS.map((f, i) => (
           <span

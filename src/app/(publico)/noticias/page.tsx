@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { CarrosselNoticias } from "@/components/noticias/CarrosselNoticias";
 import { GaleriaDestaques } from "@/components/noticias/GaleriaDestaques";
 import { MidiaThumb } from "@/components/noticias/MidiaThumb";
 import { ButtonLink } from "@/components/ui/Button";
+import { Destaque } from "@/components/ui/Destaque";
 import { NOTICIAS, VIDEO_SEMANA, VIDEOS_DESTAQUE } from "@/constants/noticias";
 import { linkWhatsApp } from "@/constants/site";
-import { formatarData } from "@/lib/utils";
+import { alternativas } from "@/i18n/config";
+import { LinkIdioma } from "@/i18n/cliente";
+import { formatarDataIdioma, preencher } from "@/i18n/formatar";
+import { obterTextos } from "@/i18n/servidor";
 
-export const metadata: Metadata = {
-  title: "Notícias",
-  description: "Gols, lances e melhores momentos dos atletas VMD, além das últimas notícias da assessoria.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { idioma, t } = await obterTextos();
+  return { title: t.noticias.metaTitulo, description: t.noticias.metaDescricao, alternates: alternativas(idioma, "/noticias") };
+}
 
-export default function NoticiasPage() {
+export default async function NoticiasPage() {
+  const { idioma, t } = await obterTextos();
   // TODO: trocar pelos services (video.service / noticia.service), apenas itens PUBLICADOS.
   const destaque = VIDEO_SEMANA;
 
@@ -23,27 +27,27 @@ export default function NoticiasPage() {
       <section className="secao" aria-labelledby="gols-destaques">
         <FundoEsportivo tipo="pista" />
         <div className="container">
-          <p className="eyebrow">Gols e destaques</p>
+          <p className="eyebrow">{t.noticias.eyebrow}</p>
           <h1 id="gols-destaques" className="titulo-secao">
-            Os melhores momentos dos <span className="destaque">nossos atletas.</span>
+            <Destaque a={t.noticias.tituloA} b={t.noticias.tituloB} />
           </h1>
 
           <article className="destaque-semana">
-            <Link href={`/atletas/${destaque.atletaSlug}`} className="destaque-semana__midia"
+            <LinkIdioma href={`/atletas/${destaque.atletaSlug}`} className="destaque-semana__midia"
               tabIndex={-1}
-              aria-label={`Assistir: ${destaque.titulo}`}
+              aria-label={preencher(t.noticias.assistir, { titulo: destaque.titulo })}
             >
               <MidiaThumb imagem={destaque.thumb} play duracao={destaque.duracao} grande />
-            </Link>
+            </LinkIdioma>
             <div className="destaque-semana__info">
-              <span className="selo">Destaque da semana</span>
+              <span className="selo">{t.noticias.destaqueSemana}</span>
               <h2 className="destaque-semana__titulo">{destaque.titulo}</h2>
               <p className="destaque-semana__meta">
                 {destaque.atleta} · {destaque.competicao} ·{" "}
-                <time dateTime={destaque.data}>{formatarData(destaque.data)}</time>
+                <time dateTime={destaque.data}>{formatarDataIdioma(destaque.data, idioma)}</time>
               </p>
               <ButtonLink href={`/atletas/${destaque.atletaSlug}`} className="btn--sm">
-                Assistir agora
+                {t.noticias.assistirAgora}
               </ButtonLink>
             </div>
           </article>
@@ -54,12 +58,12 @@ export default function NoticiasPage() {
 
       <section className="secao secao--clara" aria-labelledby="ultimas-noticias">
         <div className="container">
-          <p className="eyebrow">Notícias</p>
+          <p className="eyebrow">{t.noticias.ultimasEyebrow}</p>
           <h2 id="ultimas-noticias" className="titulo-secao titulo-secao--pequeno">
-            Últimas <span className="destaque">notícias.</span>
+            <Destaque a={t.noticias.ultimasA} b={t.noticias.ultimasB} />
           </h2>
           {NOTICIAS.length === 0 ? (
-            <p className="vazio">Em breve, novas notícias.</p>
+            <p className="vazio">{t.noticias.vazio}</p>
           ) : (
             <CarrosselNoticias noticias={NOTICIAS} />
           )}
@@ -70,10 +74,10 @@ export default function NoticiasPage() {
         <FundoEsportivo tipo="trofeu" />
         <div className="container centro">
           <h2 id="cta-noticias" className="titulo-secao">
-            Seu talento merece <span className="destaque">ser visto.</span>
+            <Destaque a={t.noticias.ctaA} b={t.noticias.ctaB} />
           </h2>
-          <ButtonLink href={linkWhatsApp("Olá! Vim pelo site da VMD e quero saber mais sobre a assessoria.")}>
-            Fale com a VMD
+          <ButtonLink href={linkWhatsApp(t.noticias.ctaMensagem)}>
+            {t.noticias.ctaBotao}
           </ButtonLink>
         </div>
       </section>

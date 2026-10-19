@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
-import { SIGLA_POSICAO, type PerfilAtleta } from "@/constants/atletas-perfil";
+import type { PerfilAtleta } from "@/constants/atletas-perfil";
+import { LinkIdioma, useTextos } from "@/i18n/cliente";
+import { preencher } from "@/i18n/formatar";
+import { siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
 import { iniciais } from "@/lib/utils";
 
 type Props = {
@@ -13,18 +17,20 @@ type Props = {
 };
 
 /**
- * Card do atleta no estilo dos cards de jogo de futebol, nas cores da VMD.
+ * Card do atleta no estilo dos cards de jogo de futebol: face perolada, moldura dourada
+ * com filete interno e faixa diagonal nas cores da VMD atrás da foto.
  * Animações: entra girando (CSS), inclina em 3D e recebe o brilho que segue o mouse
  * (.inclina e .holofote, controlados por ui/Holofote.tsx) e um reflexo passa de tempos em tempos.
  */
 export function CardFifa({ atleta, mini = false }: Props) {
-  const sigla = SIGLA_POSICAO[atleta.posicao] ?? atleta.posicao.slice(0, 3).toUpperCase();
+  const { t } = useTextos();
+  const sigla = siglaPosicao(t, atleta.posicao);
   const sobrenome = atleta.nome.split(" ").slice(-2).join(" ");
 
   const face = (
     <div className="card-fifa__face">
+      <span className="card-fifa__filete" />
       <div className="card-fifa__topo">
-        <span className="card-fifa__geral">{atleta.geral}</span>
         <span className="card-fifa__posicao">{sigla}</span>
         <span className="card-fifa__divisor" />
         <span className="card-fifa__pais">{atleta.pais}</span>
@@ -47,15 +53,6 @@ export function CardFifa({ atleta, mini = false }: Props) {
 
       <p className="card-fifa__nome">{sobrenome}</p>
 
-      <dl className="card-fifa__atributos">
-        {atleta.atributos.map((a) => (
-          <div key={a.sigla}>
-            <dt>{a.sigla}</dt>
-            <dd>{a.valor}</dd>
-          </div>
-        ))}
-      </dl>
-
       <span className="card-fifa__marca">VMD</span>
       <span className="card-fifa__reflexo" />
     </div>
@@ -64,15 +61,20 @@ export function CardFifa({ atleta, mini = false }: Props) {
   if (mini) {
     // O card inteiro é o link; o rótulo acessível resume o que o card mostra visualmente
     return (
-      <Link
+      <LinkIdioma
         href={`/atletas/${atleta.slug}`}
         className="card-fifa-mini"
-        aria-label={`${atleta.nome}, ${atleta.posicao}, ${atleta.categoria}, ${atleta.clube}. Nota geral ${atleta.geral}. Ver perfil`}
+        aria-label={preencher(t.atletas.cardRotulo, {
+          nome: atleta.nome,
+          posicao: traduzirValor(t, "posicoes", atleta.posicao),
+          categoria: traduzirCategoria(t, atleta.categoria),
+          clube: atleta.clube,
+        })}
       >
         <div className="card-fifa inclina holofote" aria-hidden="true">
           {face}
         </div>
-      </Link>
+      </LinkIdioma>
     );
   }
 

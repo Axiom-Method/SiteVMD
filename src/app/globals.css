@@ -69,7 +69,7 @@ img, svg { max-width: 100%; }
 .logo__marca { font-family: var(--fonte-titulo); font-weight: 600; font-size: 1.9rem; letter-spacing: .08em; font-style: italic; }
 .logo__sub { font-size: .55rem; letter-spacing: .18em; text-transform: uppercase; opacity: .75; }
 .header__toggle { display: none; background: none; border: 1px solid var(--borda); color: var(--gelo); font-size: 1.3rem; border-radius: 10px; width: 44px; height: 44px; cursor: pointer; }
-.nav { display: flex; align-items: center; gap: 1.75rem; }
+.nav { display: flex; align-items: center; gap: 1.75rem; margin-left: auto; }
 .nav ul { display: flex; gap: 1.5rem; }
 .nav li a { font-weight: 700; font-size: .92rem; letter-spacing: .02em; opacity: .78; padding: .4rem 0; border-bottom: 2px solid transparent; transition: opacity .2s ease, border-color .2s ease; }
 .nav li a:hover, .nav li a[aria-current="page"] { opacity: 1; border-color: var(--laranja); }
@@ -82,7 +82,31 @@ img, svg { max-width: 100%; }
   .nav li a { display: block; padding: .8rem 0; }
   .nav .btn { text-align: center; }
   .header__cta { padding-block: .8rem; }
+  /* No celular o seletor fica à vista, entre o logo e o botão do menu */
+  .idioma { order: 2; margin-left: auto; }
+  .header__toggle { order: 3; }
 }
+
+/* ===== Seletor de idioma (SeletorIdioma.tsx) ===== */
+.idioma { position: relative; }
+.idioma__botao {
+  display: inline-flex; align-items: center; gap: .4rem; height: 44px; padding: 0 .8rem;
+  border: 1px solid var(--borda); border-radius: 10px; background: none; color: var(--gelo);
+  font-family: var(--fonte-titulo); font-weight: 600; font-size: .85rem; letter-spacing: .08em; cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+}
+.idioma__botao:hover, .idioma__botao[aria-expanded="true"] { border-color: rgba(232, 85, 15, .6); background: rgba(232, 85, 15, .08); }
+.idioma__botao svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.idioma__lista {
+  position: absolute; right: 0; top: calc(100% + .5rem); z-index: 60; min-width: 11rem; padding: .35rem;
+  border: 1px solid var(--borda-forte); border-radius: 12px; background: #1c1c1c; box-shadow: 0 18px 40px -16px rgba(0, 0, 0, .8);
+}
+.idioma__lista[hidden] { display: none; }
+.idioma__lista a { display: flex; align-items: center; gap: .65rem; padding: .6rem .7rem; border-radius: 8px; font-weight: 700; font-size: .92rem; opacity: .85; }
+.idioma__lista a:hover, .idioma__lista a:focus-visible { opacity: 1; background: rgba(242, 240, 239, .06); }
+.idioma__lista a[aria-current="true"] { opacity: 1; color: var(--laranja-2); }
+.idioma__sigla { min-width: 1.6rem; font-family: var(--fonte-titulo); font-size: .75rem; letter-spacing: .08em; color: rgba(242, 240, 239, .55); }
+.idioma__lista a[aria-current="true"] .idioma__sigla { color: var(--laranja-2); }
 
 /* ===== Seções ===== */
 /* overflow: clip (e não hidden) para não virar contêiner de rolagem: assim o position: sticky funciona dentro da seção */
@@ -776,70 +800,79 @@ body::after {
 .conquistas li::before { content: "★"; color: var(--laranja-2); }
 
 /* ----- Card estilo FIFA ----- */
-/* Formato de escudo: o mesmo polígono na moldura (laranja) e na face (escura), recuada */
+/* Formato de escudo com "coroa" no topo e ponta embaixo: o mesmo polígono na moldura (dourada),
+   no filete interno e na face (perolada) */
 .card-fifa-cena { display: grid; place-items: center; perspective: 1400px; }
 .card-fifa-gira {
-  perspective: 1000px; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .6)) drop-shadow(0 0 30px rgba(232, 85, 15, .25));
+  perspective: 1000px; filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .6)) drop-shadow(0 0 28px rgba(214, 178, 104, .3));
   animation: card-entra 1.3s var(--ease-premium) .1s backwards;
 }
 @keyframes card-entra { from { opacity: 0; transform: rotateY(-110deg) scale(.85); } }
 .card-fifa {
-  --forma: polygon(50% 0, 86% 3.5%, 100% 11%, 100% 85%, 50% 100%, 0 85%, 0 11%, 14% 3.5%);
-  position: relative; width: min(330px, 78vw); aspect-ratio: 33 / 47; padding: 6px;
-  clip-path: var(--forma);
-  background: linear-gradient(145deg, #f7a24a, var(--laranja) 35%, #8f2f05 60%, var(--laranja-2) 85%, #f9c084);
+  --forma: polygon(40% 4%, 45% 1.6%, 50% 0, 55% 1.6%, 60% 4%, 90% 4%, 100% 8.5%, 100% 81%, 96% 85%, 96% 89.5%, 60% 96.5%, 50% 100%, 40% 96.5%, 4% 89.5%, 4% 85%, 0 81%, 0 8.5%, 10% 4%);
+  --ouro: linear-gradient(150deg, #fff3cf, #c9a24f 22%, #8a6a24 45%, #e9cf8a 68%, #a8822f 85%, #fff0c4);
+  --tinta: #4f3f17;
+  position: relative; width: min(330px, 78vw); aspect-ratio: 33 / 47; padding: 5px;
+  clip-path: var(--forma); background: var(--ouro);
 }
+/* Mármore perolado: base clara, nuvens brancas e veios dourados finos */
 .card-fifa__face {
-  position: relative; isolation: isolate; width: 100%; height: 100%; overflow: hidden; clip-path: var(--forma); color: var(--gelo);
+  position: relative; isolation: isolate; width: 100%; height: 100%; overflow: hidden; clip-path: var(--forma); color: var(--tinta);
   background:
-    radial-gradient(ellipse 70% 45% at 60% 28%, rgba(232, 85, 15, .55), transparent 70%),
-    linear-gradient(170deg, #2c2c2c 0%, #151515 55%, #0b0b0b 100%);
+    linear-gradient(152deg, transparent 61%, rgba(190, 155, 80, .45) 61.4%, transparent 62%),
+    linear-gradient(28deg, transparent 72%, rgba(190, 155, 80, .35) 72.3%, transparent 72.8%),
+    linear-gradient(115deg, transparent 18%, rgba(160, 160, 160, .18) 18.5%, transparent 21%),
+    radial-gradient(ellipse 60% 40% at 25% 75%, rgba(255, 255, 255, .95), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 80% 85%, rgba(220, 216, 208, .8), transparent 70%),
+    linear-gradient(170deg, #fbfaf6 0%, #ece8df 55%, #f7f4ee 100%);
 }
-/* Malha geométrica de fundo (a mesma das seções) */
-.card-fifa__face::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("/malhas/malha-a.svg") 60% 20% / 160% no-repeat; opacity: .35; }
-.card-fifa__topo { position: absolute; left: 11%; top: 12%; z-index: 2; display: grid; justify-items: center; gap: .15rem; font-family: var(--fonte-titulo); font-weight: 600; line-height: 1; }
-.card-fifa__geral { font-size: clamp(2.4rem, 11vw, 3.3rem); background: linear-gradient(180deg, #ffd0a0, var(--laranja-2) 45%, var(--laranja)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.card-fifa__posicao { font-size: 1.05rem; letter-spacing: .06em; }
-.card-fifa__divisor { width: 1.8rem; height: 1px; margin: .35rem 0; background: rgba(242, 240, 239, .35); }
-.card-fifa__pais { font-size: .8rem; letter-spacing: .1em; color: rgba(242, 240, 239, .8); }
-.card-fifa__clube { display: grid; place-items: center; width: 34px; height: 34px; margin-top: .35rem; border-radius: 50%; border: 1.5px solid var(--laranja-2); font-size: .72rem; color: var(--laranja-2); }
-/* Foto ampliada para mostrar o busto (cabeça e tronco), dissolvendo antes do nome */
+/* Filete dourado interno, acompanhando o contorno */
+.card-fifa__filete { position: absolute; inset: 9px; z-index: -2; clip-path: var(--forma); background: var(--ouro); opacity: .9; }
+.card-fifa__filete::before { content: ""; position: absolute; inset: 1.5px; clip-path: var(--forma); background: linear-gradient(170deg, #fbfaf6 0%, #ece8df 55%, #f7f4ee 100%); }
+/* Faixa diagonal nas cores da VMD (laranja e grafite) atrás da foto, sumindo antes do nome */
+.card-fifa__face::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    linear-gradient(122deg, transparent 51%, rgba(255, 255, 255, .95) 51.4%, rgba(255, 255, 255, .95) 53%, transparent 53.5%),
+    linear-gradient(122deg, transparent 36%, #8f2f05 36.5%, var(--laranja) 44%, var(--laranja-2) 50%, transparent 50.5%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 78%); mask-image: linear-gradient(to bottom, #000 30%, transparent 78%);
+  opacity: .9;
+}
+.card-fifa__topo { position: absolute; left: 13%; top: 13%; z-index: 2; display: grid; justify-items: center; gap: .2rem; font-family: var(--fonte-titulo); font-weight: 600; line-height: 1; text-shadow: 0 0 6px #fbfaf6, 0 0 14px #fbfaf6, 0 0 22px rgba(251, 250, 246, .9); }
+.card-fifa__posicao { font-size: clamp(2rem, 9vw, 2.6rem); letter-spacing: .02em; color: var(--tinta); }
+.card-fifa__divisor { width: 2rem; height: 1px; margin: .3rem 0; background: linear-gradient(90deg, transparent, #a8822f, transparent); }
+.card-fifa__pais { padding: .2rem .4rem; border-radius: 3px; font-size: .72rem; letter-spacing: .1em; color: #fff; background: linear-gradient(180deg, #2f9e44, #1d7a32); box-shadow: 0 1px 2px rgba(0, 0, 0, .35); }
+.card-fifa__clube { display: grid; place-items: center; width: 34px; height: 34px; margin-top: .3rem; border-radius: 50%; border: 1.5px solid #a8822f; background: rgba(255, 255, 255, .6); font-size: .72rem; color: var(--tinta); }
+/* Sem notas: a foto ocupa o card inteiro e dissolve atrás do nome, já perto da base */
 .card-fifa__foto {
-  position: absolute; right: -1%; top: 3%; width: 120%; height: auto; max-width: none;
-  filter: drop-shadow(0 0 1.5px rgba(234, 131, 38, .9)) drop-shadow(0 8px 16px rgba(0, 0, 0, .5));
-  -webkit-mask-image: linear-gradient(to bottom, #000 48%, transparent 62%); mask-image: linear-gradient(to bottom, #000 48%, transparent 62%);
+  position: absolute; right: -18%; top: 4%; width: 136%; height: auto; max-width: none;
+  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .3));
+  -webkit-mask-image: linear-gradient(to bottom, #000 66%, transparent 82%); mask-image: linear-gradient(to bottom, #000 66%, transparent 82%);
 }
-.card-fifa__iniciais { position: absolute; right: 12%; top: 18%; font-family: var(--fonte-titulo); font-size: 5rem; color: rgba(242, 240, 239, .25); }
+.card-fifa__iniciais { position: absolute; right: 14%; top: 20%; font-family: var(--fonte-titulo); font-size: 5rem; color: rgba(79, 63, 23, .2); }
 .card-fifa__nome {
-  position: absolute; left: 10%; right: 10%; top: 58%; z-index: 2; padding-bottom: .4rem; text-align: center;
-  font-family: var(--fonte-titulo); font-weight: 600; font-size: clamp(1.1rem, 5vw, 1.45rem); text-transform: uppercase; letter-spacing: .04em;
-  border-bottom: 1px solid; border-image: linear-gradient(90deg, transparent, var(--laranja), transparent) 1;
+  position: absolute; left: 12%; right: 12%; top: 76%; z-index: 2; padding-bottom: .35rem; text-align: center;
+  font-family: var(--fonte-titulo); font-weight: 700; font-size: clamp(1.2rem, 5.4vw, 1.6rem); text-transform: uppercase; letter-spacing: .03em; color: var(--tinta);
+  text-shadow: 0 0 10px rgba(255, 255, 255, .9);
+  border-bottom: 1px solid; border-image: linear-gradient(90deg, transparent, #a8822f 15%, #a8822f 85%, transparent) 1;
 }
-.card-fifa__atributos { position: absolute; left: 17%; right: 13%; top: 67.5%; z-index: 2; display: grid; grid-template-columns: 1fr 1fr; gap: .1rem 1.2rem; margin: 0; font-family: var(--fonte-titulo); }
-.card-fifa__atributos div { display: flex; align-items: baseline; gap: .45rem; }
-.card-fifa__atributos dd { order: -1; margin: 0; font-weight: 600; font-size: 1.1rem; color: var(--laranja-2); }
-.card-fifa__atributos dt { font-size: .8rem; letter-spacing: .08em; color: rgba(242, 240, 239, .85); }
-.card-fifa__marca { position: absolute; left: 50%; bottom: 3.2%; translate: -50% 0; font-family: var(--fonte-titulo); font-weight: 600; font-style: italic; font-size: .8rem; letter-spacing: .2em; color: rgba(242, 240, 239, .55); }
+/* Marca embaixo, entre dois traços dourados */
+.card-fifa__marca {
+  position: absolute; left: 50%; bottom: 5.2%; translate: -50% 0; display: flex; align-items: center; gap: .45rem;
+  font-family: var(--fonte-titulo); font-weight: 700; font-style: italic; font-size: .72rem; letter-spacing: .18em; color: var(--tinta);
+}
+.card-fifa__marca::before, .card-fifa__marca::after { content: ""; width: 1.4rem; height: 1px; background: #a8822f; }
 /* Reflexo que atravessa o card de tempos em tempos */
-.card-fifa__reflexo { position: absolute; inset: -20% auto -20% 0; z-index: 3; width: 40%; pointer-events: none; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .22), transparent); transform: translateX(-160%) skewX(-18deg); animation: card-reflexo 6s ease-in-out 1.8s infinite; }
+.card-fifa__reflexo { position: absolute; inset: -20% auto -20% 0; z-index: 3; width: 40%; pointer-events: none; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent); transform: translateX(-160%) skewX(-18deg); animation: card-reflexo 6s ease-in-out 1.8s infinite; }
 @keyframes card-reflexo { 0% { transform: translateX(-160%) skewX(-18deg); } 25%, 100% { transform: translateX(330%) skewX(-18deg); } }
-/* Brilho do mouse (holofote) mais forte no card */
-.card-fifa.holofote::after { z-index: 4; background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 196, 140, .28), transparent 70%); }
+/* Brilho do mouse (holofote) dourado no card */
+.card-fifa.holofote::after { z-index: 4; background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 236, 190, .45), transparent 70%); }
 
-/* ----- Números da temporada e atributos ----- */
-.perfil__numeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2.5rem, 6vw, 5rem); }
-@media (max-width: 900px) { .perfil__numeros { grid-template-columns: 1fr; } }
-.numeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 2rem 0 0; }
+/* ----- Números da temporada ----- */
+.numeros { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 1rem; margin: 2rem 0 0; }
 .numero { padding: 1.4rem 1.25rem; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie); box-shadow: var(--brilho-topo); }
 .numero dt { font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(242, 240, 239, .6); }
 .numero dd { margin: .35rem 0 0; font-family: var(--fonte-titulo); font-weight: 600; font-size: clamp(2.2rem, 5vw, 3rem); line-height: 1; color: var(--laranja); font-variant-numeric: tabular-nums; }
-.atributos { display: grid; gap: 1.1rem; margin-top: 2rem; }
-.atributo { display: grid; grid-template-columns: 8.5rem 1fr 2.5rem; align-items: center; gap: 1rem; }
-.atributo__nome { font-weight: 700; font-size: .95rem; }
-.atributo__trilho { position: relative; height: 8px; border-radius: 999px; background: rgba(242, 240, 239, .08); overflow: hidden; }
-.atributo__barra { position: absolute; inset: 0 auto 0 0; border-radius: inherit; transform-origin: 0 50%; background: linear-gradient(90deg, var(--laranja), var(--laranja-2)); box-shadow: 0 0 12px rgba(232, 85, 15, .6); }
-.atributo__valor { font-family: var(--fonte-titulo); font-weight: 600; font-size: 1.15rem; text-align: right; color: var(--laranja-2); font-variant-numeric: tabular-nums; }
-@media (max-width: 480px) { .atributo { grid-template-columns: 7.8rem 1fr 2rem; gap: .6rem; } .atributo__nome { font-size: .88rem; } }
 
 /* ----- Vídeos do atleta ----- */
 #videos .filtros__grupo { margin-top: 2.5rem; }
@@ -932,7 +965,7 @@ body::after {
 .texto-legal__voltar { margin-top: 2.5rem !important; }
 
 /* ===================== Listagem de atletas ===================== */
-.busca-atletas { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)) auto; align-items: end; gap: 1rem; margin-top: 2.5rem; padding: 1.25rem; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie); box-shadow: var(--brilho-topo); }
+.busca-atletas { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(4, minmax(0, 1fr)) auto; align-items: end; gap: 1rem; margin-top: 2.5rem; padding: 1.25rem; border: 1px solid var(--borda); border-radius: var(--raio); background: var(--superficie); box-shadow: var(--brilho-topo); }
 .busca-atletas__campo span { display: block; margin-bottom: .4rem; font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(242, 240, 239, .6); }
 .busca-atletas__limpar { min-height: 48px; }
 @media (max-width: 900px) {
@@ -944,7 +977,7 @@ body::after {
 /* Card FIFA compacto (CardFifa mini): o mesmo card do perfil, reduzido com zoom */
 .card-fifa-mini { display: block; perspective: 900px; border-radius: 14px; transition: filter .3s ease; }
 .card-fifa-mini .card-fifa { zoom: .74; }
-.card-fifa-mini:hover, .card-fifa-mini:focus-visible { filter: drop-shadow(0 0 22px rgba(232, 85, 15, .45)); }
+.card-fifa-mini:hover, .card-fifa-mini:focus-visible { filter: drop-shadow(0 0 22px rgba(214, 178, 104, .55)); }
 .card-fifa-mini .card-fifa__reflexo { animation-delay: calc(var(--atraso-reflexo, 0s) + 2.5s); }
 
 /* ===================== Página da notícia ===================== */

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTextos } from "@/i18n/cliente";
 
 /**
  * Letreiro em movimento contínuo com o vocabulário da VMD.
@@ -9,21 +10,11 @@ import { useState } from "react";
  * Também pausa no hover e fica parado com "reduzir movimento".
  * A lista é renderizada duas vezes e o trilho anda 50%: o loop não tem emenda.
  */
-const PALAVRAS = [
-  "Imagem",
-  "Posicionamento",
-  "Valorização",
-  "Media day",
-  "Produção de vídeos",
-  "Identidade visual",
-  "Media kit",
-  "Gestão de carreira",
-] as const;
-
 function Sequencia() {
+  const { t } = useTextos();
   return (
     <>
-      {PALAVRAS.map((p, i) => (
+      {t.letreiro.palavras.map((p, i) => (
         <span key={p} className={i % 2 ? "letreiro__item letreiro__item--vazado" : "letreiro__item"}>
           {p}
           <span className="letreiro__sep" />
@@ -34,6 +25,7 @@ function Sequencia() {
 }
 
 export function FaixaLetreiro() {
+  const { t } = useTextos();
   const [pausado, setPausado] = useState(false);
 
   return (
@@ -48,7 +40,7 @@ export function FaixaLetreiro() {
           type="button"
           className="letreiro__pausa"
           aria-pressed={pausado}
-          aria-label={pausado ? "Retomar animação do letreiro" : "Pausar animação do letreiro"}
+          aria-label={pausado ? t.letreiro.retomar : t.letreiro.pausar}
           onClick={() => setPausado((p) => !p)}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
