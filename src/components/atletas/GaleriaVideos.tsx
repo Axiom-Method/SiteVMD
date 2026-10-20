@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { MidiaThumb } from "@/components/noticias/MidiaThumb";
 import { RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
-import { ROTULO_TIPO, type TipoDestaque, type VideoDestaque } from "@/constants/noticias";
-import { formatarData } from "@/lib/utils";
+import type { TipoDestaque, VideoDestaque } from "@/constants/noticias";
+import { useTextos } from "@/i18n/cliente";
+import { formatarDataIdioma, preencher } from "@/i18n/formatar";
 import { urlDoPlayer } from "@/security/video-url";
 
 /**
@@ -12,6 +13,7 @@ import { urlDoPlayer } from "@/security/video-url";
  * O iframe só é criado quando o visitante clica: até lá, nada do YouTube/Vimeo é carregado.
  */
 export function GaleriaVideos({ videos }: { videos: readonly VideoDestaque[] }) {
+  const { idioma, t } = useTextos();
   const [tipo, setTipo] = useState<TipoDestaque | "">("");
   const [aberto, setAberto] = useState<VideoDestaque | null>(null);
   const dialogo = useRef<HTMLDialogElement>(null);
@@ -27,7 +29,7 @@ export function GaleriaVideos({ videos }: { videos: readonly VideoDestaque[] }) 
   }, [aberto]);
 
   if (videos.length === 0) {
-    return <p className="vazio">Em breve, novos vídeos deste atleta.</p>;
+    return <p className="vazio">{t.videos.vazioAtleta}</p>;
   }
 
   const url = aberto?.provedor && aberto.videoId ? urlDoPlayer(aberto.provedor, aberto.videoId) : null;
@@ -35,13 +37,13 @@ export function GaleriaVideos({ videos }: { videos: readonly VideoDestaque[] }) 
   return (
     <>
       {tipos.length > 1 && (
-        <div className="filtros__grupo" role="group" aria-label="Filtrar vídeos por tipo">
+        <div className="filtros__grupo" role="group" aria-label={t.videos.filtrarTipo}>
           <button type="button" className="pilula" aria-pressed={tipo === ""} onClick={() => setTipo("")}>
-            Todos
+            {t.videos.todos}
           </button>
-          {tipos.map((t) => (
-            <button key={t} type="button" className="pilula" aria-pressed={tipo === t} onClick={() => setTipo(t)}>
-              {ROTULO_TIPO[t]}
+          {tipos.map((tp) => (
+            <button key={tp} type="button" className="pilula" aria-pressed={tipo === tp} onClick={() => setTipo(tp)}>
+              {t.videos.tipos[tp]}
             </button>
           ))}
         </div>
@@ -54,8 +56,8 @@ export function GaleriaVideos({ videos }: { videos: readonly VideoDestaque[] }) 
             <button type="button" className="video__link video__botao" onClick={() => setAberto(v)}>
               <MidiaThumb imagem={v.thumb} play duracao={v.duracao} />
               <span className="video__meta">
-                <span className="video__tipo">{ROTULO_TIPO[v.tipo]}</span>
-                <time dateTime={v.data}>{formatarData(v.data)}</time>
+                <span className="video__tipo">{t.videos.tipos[v.tipo]}</span>
+                <time dateTime={v.data}>{formatarDataIdioma(v.data, idioma)}</time>
               </span>
               <span className="video__titulo">{v.titulo}</span>
               <span className="video__atleta">{v.competicao}</span>
@@ -67,7 +69,7 @@ export function GaleriaVideos({ videos }: { videos: readonly VideoDestaque[] }) 
       <dialog
         ref={dialogo}
         className="player"
-        aria-label={aberto ? `Vídeo: ${aberto.titulo}` : "Vídeo"}
+        aria-label={aberto ? preencher(t.videos.janela, { titulo: aberto.titulo }) : t.videos.video}
         onClose={() => setAberto(null)}
         // Clique fora do quadro (no fundo escurecido) fecha
         onClick={(e) => e.target === e.currentTarget && setAberto(null)}
@@ -76,7 +78,7 @@ export function GaleriaVideos({ videos }: { videos: readonly VideoDestaque[] }) 
           <div className="player__conteudo">
             <div className="player__topo">
               <p className="player__titulo">{aberto.titulo}</p>
-              <button type="button" className="player__fechar" onClick={() => setAberto(null)} aria-label="Fechar vídeo">
+              <button type="button" className="player__fechar" onClick={() => setAberto(null)} aria-label={t.videos.fechar}>
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M6 6l12 12M18 6 6 18" />
                 </svg>
@@ -92,11 +94,11 @@ export function GaleriaVideos({ videos }: { videos: readonly VideoDestaque[] }) 
                   referrerPolicy="strict-origin-when-cross-origin"
                 />
               ) : (
-                <p className="player__vazio">O vídeo será publicado em breve.</p>
+                <p className="player__vazio">{t.videos.emBreve}</p>
               )}
             </div>
             <p className="player__meta">
-              {ROTULO_TIPO[aberto.tipo]} · {aberto.competicao} · {formatarData(aberto.data)}
+              {t.videos.tipos[aberto.tipo]} · {aberto.competicao} · {formatarDataIdioma(aberto.data, idioma)}
             </p>
           </div>
         )}

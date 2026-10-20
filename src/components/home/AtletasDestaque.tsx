@@ -4,30 +4,33 @@ import { ButtonLink } from "@/components/ui/Button";
 import type { AtletaResumo } from "@/constants/atletas-destaque";
 import { Revelar } from "@/components/ui/Revelar";
 import { PalavraFundo } from "@/components/ui/PalavraFundo";
+import { Destaque } from "@/components/ui/Destaque";
+import { obterTextos } from "@/i18n/servidor";
 
-export function AtletasDestaque({ atletas }: { atletas: readonly AtletaResumo[] }) {
+export async function AtletasDestaque({ atletas }: { atletas: readonly AtletaResumo[] }) {
+  const { t } = await obterTextos();
   return (
     <section className="secao secao--escura secao--carrossel" aria-labelledby="atletas-destaque">
-      <PalavraFundo>Elenco</PalavraFundo>
+      <PalavraFundo>{t.destaques.fundo}</PalavraFundo>
       <FundoEsportivo tipo="pista" />
       <div className="container">
         <Revelar>
-          <p className="eyebrow">Nossos atletas</p>
+          <p className="eyebrow">{t.destaques.eyebrow}</p>
           <h2 id="atletas-destaque" className="titulo-secao">
-            Resultados e <span className="destaque">atletas</span>
+            <Destaque a={t.destaques.tituloA} b={t.destaques.tituloB} />
           </h2>
-          <p className="subtitulo">Perfis aprovados e publicados pela equipe VMD.</p>
+          <p className="subtitulo">{t.destaques.subtitulo}</p>
         </Revelar>
 
         {atletas.length === 0 ? (
-          <p className="vazio">Em breve, novos atletas em destaque.</p>
+          <p className="vazio">{t.destaques.vazio}</p>
         ) : (
           <CarrosselAtletas atletas={atletas} />
         )}
 
         <div className="centro">
           <ButtonLink href="/atletas" variant="contorno">
-            Ver todos os atletas
+            {t.destaques.verTodos}
           </ButtonLink>
         </div>
       </div>

@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import type { AtletaResumo } from "@/constants/atletas-destaque";
+import { LinkIdioma, useTextos } from "@/i18n/cliente";
+import { traduzirCategoria, traduzirValor } from "@/i18n/valores";
 import { iniciais } from "@/lib/utils";
 
 /**
@@ -13,6 +14,7 @@ import { iniciais } from "@/lib/utils";
  * (sem animação) para o card equivalente nela, então o salto é imperceptível.
  */
 export function CarrosselAtletas({ atletas }: { atletas: readonly AtletaResumo[] }) {
+  const { t } = useTextos();
   const trilhoRef = useRef<HTMLUListElement>(null);
   const total = atletas.length;
   const infinito = total > 1;
@@ -72,9 +74,9 @@ export function CarrosselAtletas({ atletas }: { atletas: readonly AtletaResumo[]
   ).flat();
 
   return (
-    <div className="carrossel" role="region" aria-roledescription="carrossel" aria-label="Atletas em destaque">
+    <div className="carrossel" role="region" aria-roledescription="carrossel" aria-label={t.destaques.carrossel}>
       {infinito && (
-        <button type="button" className="carrossel__seta carrossel__seta--esq" onClick={() => rolar(-1)} aria-label="Atleta anterior">
+        <button type="button" className="carrossel__seta carrossel__seta--esq" onClick={() => rolar(-1)} aria-label={t.destaques.anterior}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M15 5l-7 7 7 7" />
           </svg>
@@ -85,7 +87,7 @@ export function CarrosselAtletas({ atletas }: { atletas: readonly AtletaResumo[]
         {itens.map(({ atleta: a, copia, clone }) => (
           // Cópias só existem para o loop: ficam fora da árvore de acessibilidade e do Tab
           <li key={`${copia}-${a.slug}`} className="carrossel__item" aria-hidden={clone || undefined}>
-            <Link href={`/atletas/${a.slug}`} className="atleta-foto inclina inclina--suave" tabIndex={clone ? -1 : undefined}>
+            <LinkIdioma href={`/atletas/${a.slug}`} className="atleta-foto inclina inclina--suave" tabIndex={clone ? -1 : undefined}>
               {a.foto ? (
                 <Image src={a.foto} alt="" fill sizes="(max-width: 640px) 84vw, 940px" className="atleta-foto__img" />
               ) : (
@@ -95,21 +97,21 @@ export function CarrosselAtletas({ atletas }: { atletas: readonly AtletaResumo[]
               )}
               <span className="atleta-foto__info">
                 <span className="atleta-foto__meta">
-                  {a.posicao} · {a.categoria}
+                  {traduzirValor(t, "posicoes", a.posicao)} · {traduzirCategoria(t, a.categoria)}
                 </span>
                 <span className="atleta-foto__nome">{a.nome}</span>
                 <span className="atleta-foto__clube">{a.clube}</span>
                 <span className="atleta-foto__link">
-                  Ver perfil <span aria-hidden="true">→</span>
+                  {t.destaques.verPerfil} <span aria-hidden="true">→</span>
                 </span>
               </span>
-            </Link>
+            </LinkIdioma>
           </li>
         ))}
       </ul>
 
       {infinito && (
-        <button type="button" className="carrossel__seta carrossel__seta--dir" onClick={() => rolar(1)} aria-label="Próximo atleta">
+        <button type="button" className="carrossel__seta carrossel__seta--dir" onClick={() => rolar(1)} aria-label={t.destaques.proximo}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 5l7 7-7 7" />
           </svg>

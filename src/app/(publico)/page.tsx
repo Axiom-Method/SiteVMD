@@ -12,16 +12,21 @@ import { DadosEstruturados } from "@/components/seo/DadosEstruturados";
 import { Holofote } from "@/components/ui/Holofote";
 import { ATLETAS_DESTAQUE } from "@/constants/atletas-destaque";
 import { SITE } from "@/constants/site";
+import { alternativas } from "@/i18n/config";
+import { obterTextos } from "@/i18n/servidor";
 
-export const metadata: Metadata = {
-  // absolute: sem o sufixo "| VMD" do template (o título já começa com a marca)
-  title: { absolute: "VMD | Assessoria & Marketing Esportivo" },
-  alternates: { canonical: "/" },
-  description:
-    "Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas. Conectamos atletas a técnicos e olheiros.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { idioma, t } = await obterTextos();
+  return {
+    // absolute: sem o sufixo "| VMD" do template (o título já começa com a marca)
+    title: { absolute: t.meta.titulo },
+    alternates: alternativas(idioma, "/"),
+    description: t.meta.descricao,
+  };
+}
 
-export default function Home() {
+export default async function Home() {
+  const { t } = await obterTextos();
   // TODO: trocar por atletaService.listarDestaques() (apenas status PUBLICADO).
   const atletas = ATLETAS_DESTAQUE;
 
@@ -30,10 +35,10 @@ export default function Home() {
       <DadosEstruturados
         dados={{
           "@type": "Organization",
-          name: "VMD Assessoria & Marketing Esportivo",
+          name: t.meta.nomeSite,
           url: process.env.APP_URL ?? "http://localhost:3000",
-          description: "Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas.",
-          contactPoint: { "@type": "ContactPoint", telephone: `+${SITE.whatsapp}`, contactType: "customer service", availableLanguage: "Portuguese" },
+          description: t.rodape.texto,
+          contactPoint: { "@type": "ContactPoint", telephone: `+${SITE.whatsapp}`, contactType: "customer service", availableLanguage: ["Portuguese", "English", "Spanish", "Italian"] },
         }}
       />
       <Holofote />

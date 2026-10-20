@@ -1,11 +1,14 @@
 import { ImageResponse } from "next/og";
+import { pt } from "@/i18n/dicionarios/pt";
+import { obterTextos } from "@/i18n/servidor";
 
-/** Imagem de prévia do site ao compartilhar o link (WhatsApp, Instagram, LinkedIn...). */
-export const alt = "VMD | Assessoria & Marketing Esportivo";
+/** Imagem de prévia do site ao compartilhar o link (WhatsApp, Instagram, LinkedIn...), no idioma da página. */
+export const alt = pt.meta.titulo;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function ImagemCompartilhamento() {
+export default async function ImagemCompartilhamento() {
+  const { t } = await obterTextos();
   return new ImageResponse(
     (
       <div
@@ -24,12 +27,12 @@ export default function ImagemCompartilhamento() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 20, color: "#ea8326", fontSize: 30, letterSpacing: 8 }}>
           <div style={{ width: 70, height: 4, background: "#e8550f" }} />
-          ASSESSORIA & MARKETING ESPORTIVO
+          {t.meta.descricaoMarca.toUpperCase()}
         </div>
         <div style={{ fontSize: 190, fontWeight: 800, fontStyle: "italic", lineHeight: 1, marginTop: 24 }}>VMD</div>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 54, fontWeight: 700, lineHeight: 1.1, marginTop: 28 }}>
-          <span>Transformamos presença digital em</span>
-          <span style={{ color: "#e8550f" }}>posicionamento profissional.</span>
+          <span>{t.og.linhaA}</span>
+          <span style={{ color: "#e8550f" }}>{t.og.linhaB}</span>
         </div>
       </div>
     ),

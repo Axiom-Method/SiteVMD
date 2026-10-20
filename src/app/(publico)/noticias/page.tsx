@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { Trofeu3DLazy } from "@/components/home/Trofeu3DLazy";
 import { CarrosselNoticias } from "@/components/noticias/CarrosselNoticias";
@@ -12,7 +11,10 @@ import { PalavraFundo } from "@/components/ui/PalavraFundo";
 import { Revelar } from "@/components/ui/Revelar";
 import { NOTICIAS, VIDEO_SEMANA, VIDEOS_DESTAQUE } from "@/constants/noticias";
 import { linkWhatsApp } from "@/constants/site";
-import { formatarData } from "@/lib/utils";
+import { alternativas } from "@/i18n/config";
+import { LinkIdioma } from "@/i18n/cliente";
+import { formatarDataIdioma, preencher } from "@/i18n/formatar";
+import { obterTextos } from "@/i18n/servidor";
 
 export const metadata: Metadata = {
   title: "Notícias",
@@ -82,7 +84,7 @@ export default function NoticiasPage() {
             <p className="subtitulo">Conquistas, parcerias e bastidores da assessoria.</p>
           </Revelar>
           {NOTICIAS.length === 0 ? (
-            <p className="vazio">Em breve, novas notícias.</p>
+            <p className="vazio">{t.noticias.vazio}</p>
           ) : (
             <CarrosselNoticias noticias={NOTICIAS} />
           )}

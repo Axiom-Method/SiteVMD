@@ -2,10 +2,13 @@ import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { ButtonLink } from "@/components/ui/Button";
+import { Destaque } from "@/components/ui/Destaque";
 import { MovimentoProvider } from "@/components/ui/Revelar";
+import { obterTextos } from "@/i18n/servidor";
 
 // Fica fora do layout público: por isso inclui header e rodapé aqui, para o visitante não ficar sem saída.
-export default function NotFound() {
+export default async function NotFound() {
+  const { t } = await obterTextos();
   return (
     <MovimentoProvider>
       <Header />
@@ -13,15 +16,15 @@ export default function NotFound() {
         <section className="secao secao--status" aria-labelledby="titulo-404">
           <FundoEsportivo tipo="campo" />
           <div className="container centro">
-            <p className="eyebrow">Erro 404</p>
+            <p className="eyebrow">{t.erro404.eyebrow}</p>
             <h1 id="titulo-404" className="titulo-secao">
-              Página não <span className="destaque">encontrada</span>
+              <Destaque a={t.erro404.tituloA} b={t.erro404.tituloB} />
             </h1>
-            <p className="subtitulo">O endereço que você acessou não existe ou foi removido.</p>
+            <p className="subtitulo">{t.erro404.texto}</p>
             <div className="acoes cta-final__acoes">
-              <ButtonLink href="/">Voltar para a Home</ButtonLink>
+              <ButtonLink href="/">{t.erro404.home}</ButtonLink>
               <ButtonLink href="/atletas" variant="contorno">
-                Ver atletas
+                {t.erro404.atletas}
               </ButtonLink>
             </div>
           </div>

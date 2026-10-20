@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
+import { LinkIdioma } from "@/i18n/cliente";
 
 type Props = {
   href: string;
@@ -8,7 +8,10 @@ type Props = {
   className?: string;
 };
 
-/** Link com aparência de botão. Links externos abrem com noopener/noreferrer. */
+/**
+ * Link com aparência de botão. Links externos abrem com noopener/noreferrer;
+ * os internos mantêm o idioma atual (/cadastro → /en/cadastro).
+ */
 export function ButtonLink({ href, children, variant = "primario", className = "" }: Props) {
   const classes = `btn btn--${variant} ${className}`.trim();
   if (/^https?:\/\//i.test(href)) {
@@ -19,8 +22,8 @@ export function ButtonLink({ href, children, variant = "primario", className = "
     );
   }
   return (
-    <Link href={href} className={classes}>
+    <LinkIdioma href={href} className={classes}>
       {children}
-    </Link>
+    </LinkIdioma>
   );
 }

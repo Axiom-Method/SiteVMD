@@ -1,27 +1,24 @@
 import { FundoEsportivo } from "@/components/home/FundoEsportivo";
 import { Revelar, RevelarGrupo, RevelarItem } from "@/components/ui/Revelar";
 import { PalavraFundo } from "@/components/ui/PalavraFundo";
+import { Destaque } from "@/components/ui/Destaque";
+import { obterTextos } from "@/i18n/servidor";
 
-const PASSOS = [
-  { titulo: "Cadastro", texto: "Preencha seus dados e envie as informações do atleta (com autorização do responsável, se menor de 18 anos)." },
-  { titulo: "Orçamento personalizado", texto: "Conversamos sobre sua modalidade e suas necessidades e enviamos uma proposta sob medida." },
-  { titulo: "Perfil publicado", texto: "Nossa equipe revisa e aprova o perfil. Depois disso, ele fica visível para técnicos e olheiros." },
-] as const;
-
-export function ComoFunciona() {
+export async function ComoFunciona() {
+  const { t } = await obterTextos();
   return (
     <section className="secao" aria-labelledby="como-funciona">
-      <PalavraFundo lado="direita">Método</PalavraFundo>
+      <PalavraFundo lado="direita">{t.comoFunciona.fundo}</PalavraFundo>
       <FundoEsportivo tipo="raias" />
       <div className="container">
         <Revelar>
-          <p className="eyebrow">Passo a passo</p>
+          <p className="eyebrow">{t.comoFunciona.eyebrow}</p>
           <h2 id="como-funciona" className="titulo-secao">
-            Como <span className="destaque">funciona</span>
+            <Destaque a={t.comoFunciona.tituloA} b={t.comoFunciona.tituloB} />
           </h2>
         </Revelar>
         <RevelarGrupo as="ol" className="passos">
-          {PASSOS.map((p, i) => (
+          {t.comoFunciona.passos.map((p, i) => (
             <RevelarItem as="li" key={p.titulo} className="passo holofote inclina">
               {/* Número + trilho até o próximo passo (o trilho some no último) */}
               <span className="passo__numero" aria-hidden="true">
