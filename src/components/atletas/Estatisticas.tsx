@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import type { Estatistica } from "@/constants/atletas-perfil";
 import { useTextos } from "@/i18n/cliente";
 import { formatarNumero } from "@/i18n/formatar";
-import { traduzirValor } from "@/i18n/valores";
+import { rotuloEstatistica } from "@/i18n/valores";
 
 /**
  * Número que conta do zero até o valor quando entra na tela.
@@ -37,12 +37,13 @@ function Contador({ valor }: { valor: number }) {
 }
 
 export function NumerosTemporada({ estatisticas }: { estatisticas: readonly Estatistica[] }) {
-  const { t } = useTextos();
+  const { idioma, t } = useTextos();
+  if (estatisticas.length === 0) return <p className="vazio">{t.perfil.numerosVazio}</p>;
   return (
     <dl className="numeros">
       {estatisticas.map((e) => (
         <div key={e.rotulo} className="numero holofote">
-          <dt>{traduzirValor(t, "estatisticas", e.rotulo)}</dt>
+          <dt>{rotuloEstatistica(t, idioma, e)}</dt>
           <dd>
             <Contador valor={e.valor} />
           </dd>

@@ -230,6 +230,7 @@ export const pt = {
     temporada: "Temporada {ano}",
     numerosA: "Números do",
     numerosB: "atleta",
+    numerosVazio: "Os números desta temporada serão publicados em breve.",
     videosEyebrow: "Gols e lances",
     videosA: "Vídeos do",
     videosB: "atleta",

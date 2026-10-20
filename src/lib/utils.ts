@@ -16,3 +16,8 @@ export function iniciais(nome: string): string {
     .map((p) => p[0]?.toUpperCase() ?? "")
     .join("");
 }
+
+/** Âncora da seção de um esporte na página de números do admin: "Vôlei" → "volei". */
+export function ancoraEsporte(esporte: string): string {
+  return esporte.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+}

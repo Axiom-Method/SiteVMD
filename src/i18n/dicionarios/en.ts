@@ -220,6 +220,7 @@ export const en: Dicionario = {
     temporada: "{ano} season",
     numerosA: "Athlete",
     numerosB: "stats",
+    numerosVazio: "This season's stats will be published soon.",
     videosEyebrow: "Goals and highlights",
     videosA: "Athlete",
     videosB: "videos",

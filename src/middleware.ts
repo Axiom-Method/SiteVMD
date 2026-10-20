@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { COOKIE_SESSAO } from "@/lib/auth-cookie";
 import { CABECALHO_IDIOMA, COOKIE_IDIOMA, ehIdioma, IDIOMA_PADRAO, localizar, separarIdioma } from "@/i18n/config";
 import { buildCsp } from "@/security/headers";
 
@@ -8,6 +9,19 @@ const SEM_IDIOMA = /^\/(admin|login|api|sitemap\.xml|robots\.txt|icon\.svg)(\/|$
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const prefetch = request.headers.has("next-router-prefetch") || request.headers.get("purpose") === "prefetch";
+
+  // ----- Painel admin: sem o cookie de sessão nem chega na página -----
+  // (é só um filtro rápido; a sessão é validada de verdade no servidor, no layout e em cada ação)
+  const temSessao = request.cookies.has(COOKIE_SESSAO);
+  if (/^\/api\/admin(\/|$)/.test(pathname) && !temSessao) {
+    return NextResponse.json({ erro: "Não autorizado." }, { status: 401 });
+  }
+  if (/^\/admin(\/|$)/.test(pathname) && !temSessao) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.search = `?proximo=${encodeURIComponent(pathname)}`;
+    return NextResponse.redirect(url);
+  }
 
   // ----- Idioma -----
   // /pt/... não existe: o português fica sem prefixo
@@ -63,7 +77,7 @@ export function middleware(request: NextRequest) {
   if (csp) response.headers.set("Content-Security-Policy", csp);
   return response;
 
-  // TODO (próxima etapa): proteger /admin e /api/admin e aplicar rate limit aqui.
+  // TODO: rate limit por IP no /login e nas rotas /api.
 }
 
 export const config = {

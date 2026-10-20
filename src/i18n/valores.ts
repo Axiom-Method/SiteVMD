@@ -1,3 +1,5 @@
+import type { Estatistica } from "@/constants/atletas-perfil";
+import type { Idioma } from "@/i18n/config";
 import type { Dicionario } from "@/i18n/dicionarios";
 import { preencher } from "@/i18n/formatar";
 
@@ -21,4 +23,9 @@ export function traduzirCategoria(t: Dicionario, categoria: string): string {
 /** Sigla da posição no card; sem tradução, usa as três primeiras letras. */
 export function siglaPosicao(t: Dicionario, posicao: string): string {
   return t.valores.siglas[posicao] ?? posicao.slice(0, 3).toUpperCase();
+}
+
+/** Rótulo de um número do perfil: tradução cadastrada no admin → dicionário → português. */
+export function rotuloEstatistica(t: Dicionario, idioma: Idioma, e: Estatistica): string {
+  return (idioma !== "pt" && e.traducoes?.[idioma]) || traduzirValor(t, "estatisticas", e.rotulo);
 }
