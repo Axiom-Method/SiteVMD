@@ -44,8 +44,6 @@ export const es: Dicionario = {
     lead: "Asesoría especializada en fortalecer la imagen, el posicionamiento y el valor de los atletas.",
     cta: "Quiero ser VMD",
     conhecerAtletas: "Conocer a los atletas",
-    rolarRotulo: "Desplazarse a la siguiente sección",
-    rolar: "Desliza",
     posterSobre: "Tu juego",
     posterSelo: "Temp. 26",
     posterSob: "En otro nivel",
@@ -54,8 +52,6 @@ export const es: Dicionario = {
 
   letreiro: {
     palavras: ["Imagen", "Posicionamiento", "Valorización", "Media day", "Producción de vídeos", "Identidad visual", "Media kit", "Gestión de carrera"],
-    pausar: "Pausar la animación del rótulo",
-    retomar: "Reanudar la animación del rótulo",
   },
 
   quemSomos: {

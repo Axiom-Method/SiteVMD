@@ -52,8 +52,6 @@ export const pt = {
     lead: "Assessoria especializada no fortalecimento da imagem, posicionamento e valorização de atletas.",
     cta: "Quero ser VMD",
     conhecerAtletas: "Conhecer os atletas",
-    rolarRotulo: "Rolar para a próxima seção",
-    rolar: "Role",
     posterSobre: "Seu jogo",
     posterSelo: "Temp. 26",
     posterSob: "Em outro nível",
@@ -62,8 +60,6 @@ export const pt = {
 
   letreiro: {
     palavras: ["Imagem", "Posicionamento", "Valorização", "Media day", "Produção de vídeos", "Identidade visual", "Media kit", "Gestão de carreira"],
-    pausar: "Pausar animação do letreiro",
-    retomar: "Retomar animação do letreiro",
   },
 
   quemSomos: {
