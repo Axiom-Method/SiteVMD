@@ -83,9 +83,9 @@ export default async function NoticiaPage({ params }: Props) {
         <section className="secao secao--escura" aria-labelledby="outras-noticias">
           <div className="container">
             <Revelar>
-              <p className="eyebrow">Continue lendo</p>
+              <p className="eyebrow">{t.noticias.continueLendo}</p>
               <h2 id="outras-noticias" className="titulo-secao titulo-secao--pequeno">
-                Outras <span className="destaque">notícias</span>
+                <Destaque a={t.noticias.outrasA} b={t.noticias.outrasB} />
               </h2>
             </Revelar>
             <div className="grade grade--3">
