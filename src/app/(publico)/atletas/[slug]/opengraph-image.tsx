@@ -2,7 +2,8 @@ import { ImageResponse } from "next/og";
 import { buscarPerfil } from "@/constants/atletas-perfil";
 import { pt } from "@/i18n/dicionarios/pt";
 import { obterTextos } from "@/i18n/servidor";
-import { siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
+import { rotuloEstatistica, siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
+import { numerosDoAtleta } from "@/services/estatistica.service";
 
 /** Prévia do perfil ao compartilhar: card do atleta com posição e números, no idioma da página. */
 export const alt = pt.perfil.imagemAlt;
@@ -12,7 +13,8 @@ export const contentType = "image/png";
 export default async function ImagemAtleta({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const atleta = buscarPerfil(slug);
-  const { t } = await obterTextos();
+  const { idioma, t } = await obterTextos();
+  const numeros = atleta ? await numerosDoAtleta(atleta) : null;
   const nome = atleta?.nome ?? t.perfil.atletaPadrao;
 
   return new ImageResponse(
@@ -57,12 +59,12 @@ export default async function ImagemAtleta({ params }: { params: Promise<{ slug:
           </div>
           <div style={{ display: "flex", fontSize: 78, fontWeight: 800, lineHeight: 1.05, marginTop: 16  }}>{nome.toUpperCase()}</div>
           <div style={{ display: "flex", fontSize: 32, color: "#ccc", marginTop: 14  }}>{atleta?.clube ?? ""}</div>
-          {atleta && (
+          {numeros && numeros.estatisticas.length > 0 && (
             <div style={{ display: "flex", gap: 46, marginTop: 44 }}>
-              {atleta.estatisticas.slice(0, 3).map((e) => (
+              {numeros.estatisticas.slice(0, 3).map((e) => (
                 <div key={e.rotulo} style={{ display: "flex", flexDirection: "column" }}>
                   <span style={{ fontSize: 64, fontWeight: 800, color: "#e8550f", lineHeight: 1 }}>{e.valor}</span>
-                  <span style={{ fontSize: 22, color: "#aaa", marginTop: 6 }}>{traduzirValor(t, "estatisticas", e.rotulo)}</span>
+                  <span style={{ fontSize: 22, color: "#aaa", marginTop: 6 }}>{rotuloEstatistica(t, idioma, e)}</span>
                 </div>
               ))}
             </div>

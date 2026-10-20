@@ -16,6 +16,7 @@ import { alternativas } from "@/i18n/config";
 import { LinkIdioma } from "@/i18n/cliente";
 import { formatarNumero, preencher } from "@/i18n/formatar";
 import { obterTextos } from "@/i18n/servidor";
+import { numerosDoAtleta } from "@/services/estatistica.service";
 import { siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -44,6 +45,8 @@ export default async function PerfilAtletaPage({ params }: Props) {
   const atleta = buscarPerfil(slug);
   if (!atleta) notFound();
   const { idioma, t } = await obterTextos();
+  // Números vêm do banco (editados no painel admin); sem banco, os de exemplo
+  const numeros = await numerosDoAtleta(atleta);
 
   const posicao = traduzirValor(t, "posicoes", atleta.posicao);
   const categoria = traduzirCategoria(t, atleta.categoria);
@@ -135,12 +138,12 @@ export default async function PerfilAtletaPage({ params }: Props) {
         <FundoEsportivo tipo="pista" />
         <div className="container">
           <Revelar>
-            <p className="eyebrow">{preencher(t.perfil.temporada, { ano: atleta.temporada })}</p>
+            <p className="eyebrow">{preencher(t.perfil.temporada, { ano: numeros.temporada })}</p>
             <h2 id="numeros" className="titulo-secao titulo-secao--pequeno">
               <Destaque a={t.perfil.numerosA} b={t.perfil.numerosB} />
             </h2>
           </Revelar>
-          <NumerosTemporada estatisticas={atleta.estatisticas} />
+          <NumerosTemporada estatisticas={numeros.estatisticas} />
         </div>
       </section>
 

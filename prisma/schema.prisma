@@ -1,1 +1,92 @@
-// TODO: modelos Atleta, VideoAtleta, Plano, Assinatura, Noticia, MidiaNoticia, Admin, LogAuditoria
+// Banco do site (PostgreSQL). A URL fica em DATABASE_URL no .env (nunca no código).
+// Comandos: npm run db:migrar (desenvolvimento) · npm run db:aplicar (produção) · npm run db:seed
+//
+// TODO (próximas etapas): Atleta, VideoAtleta, Plano, Assinatura, Noticia, MidiaNoticia.
+// Por enquanto os atletas continuam em src/constants (mock); o banco guarda os números de cada um
+// pelo slug do atleta.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Conta da equipe VMD com acesso ao painel /admin.
+model Admin {
+  id               String         @id @default(cuid())
+  email            String         @unique
+  nome             String
+  /// scrypt (ver src/lib/senha.ts); a senha em si nunca é gravada
+  senhaHash        String
+  ativo            Boolean        @default(true)
+  /// Bloqueio contra força bruta: 5 erros seguidos bloqueiam por 15 minutos
+  tentativasFalhas Int            @default(0)
+  bloqueadoAte     DateTime?
+  ultimoLogin      DateTime?
+  criadoEm         DateTime       @default(now())
+  sessoes          Sessao[]
+  logs             LogAuditoria[]
+}
+
+/// Sessão de login. O cookie leva um token aleatório; aqui fica só o hash SHA-256 dele.
+model Sessao {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  adminId   String
+  admin     Admin    @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  criadaEm  DateTime @default(now())
+  expiraEm  DateTime
+
+  @@index([adminId])
+}
+
+/// Um número exibido no perfil (ex.: "Gols"). Cada esporte tem os seus campos padrão (posicao = null)
+/// e uma posição pode ter campos próprios, que substituem os do esporte (ex.: Goleiro).
+model CampoEstatistica {
+  id        String              @id @default(cuid())
+  /// Valor de MODALIDADES (validations/atleta.schema.ts), em português: "Futebol", "Vôlei"...
+  esporte   String
+  /// Posição como gravada no atleta ("Goleiro"); vazio = vale para todas as posições do esporte
+  posicao   String?
+  /// Rótulo em português (obrigatório) e traduções opcionais; sem tradução, aparece o português
+  rotulo    String
+  rotuloEn  String?
+  rotuloEs  String?
+  rotuloIt  String?
+  ordem     Int                 @default(0)
+  criadoEm  DateTime            @default(now())
+  valores   EstatisticaAtleta[]
+
+  @@index([esporte, posicao])
+}
+
+/// Valor de um campo para um atleta numa temporada.
+model EstatisticaAtleta {
+  id           String           @id @default(cuid())
+  atletaSlug   String
+  temporada    String
+  campoId      String
+  campo        CampoEstatistica @relation(fields: [campoId], references: [id], onDelete: Cascade)
+  valor        Int
+  atualizadoEm DateTime         @updatedAt
+
+  @@unique([atletaSlug, temporada, campoId])
+  @@index([atletaSlug])
+}
+
+/// Quem fez o quê no painel (login, alterações).
+model LogAuditoria {
+  id       String   @id @default(cuid())
+  adminId  String?
+  admin    Admin?   @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  acao     String
+  alvo     String
+  detalhes Json?
+  ip       String?
+  criadoEm DateTime @default(now())
+
+  @@index([criadoEm])
+}

@@ -8,7 +8,8 @@
 import { ATLETAS_DESTAQUE, type AtletaResumo } from "@/constants/atletas-destaque";
 import { VIDEO_SEMANA, VIDEOS_DESTAQUE, type VideoDestaque } from "@/constants/noticias";
 
-export type Estatistica = { rotulo: string; valor: number };
+/** Um número do perfil. `traducoes` vem dos campos cadastrados no painel admin (sem ela, usa o dicionário). */
+export type Estatistica = { rotulo: string; valor: number; traducoes?: Partial<Record<"en" | "es" | "it", string>> };
 
 export type PerfilAtleta = AtletaResumo & {
   numero: number;
