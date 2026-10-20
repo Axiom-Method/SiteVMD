@@ -4,7 +4,7 @@ import { ComoFunciona } from "@/components/home/ComoFunciona";
 import { CtaFinal } from "@/components/home/CtaFinal";
 import { Diferenciais } from "@/components/home/Diferenciais";
 import { FaixaLetreiro } from "@/components/home/FaixaLetreiro";
-import { HeroSlider } from "@/components/home/HeroSlider";
+import { Hero } from "@/components/home/Hero";
 import { QuemSomos } from "@/components/home/QuemSomos";
 import { Servicos } from "@/components/home/Servicos";
 import { TecnicosOlheiros } from "@/components/home/TecnicosOlheiros";
@@ -42,7 +42,7 @@ export default async function Home() {
         }}
       />
       <Holofote />
-      <HeroSlider />
+      <Hero />
       <FaixaLetreiro />
       <QuemSomos />
       <AtletasDestaque atletas={atletas} />
