@@ -333,13 +333,6 @@ img, svg { max-width: 100%; }
   100% { transform: translate(-70px, -820px); opacity: 0; }
 }
 
-/* Indicador de rolagem */
-/* Canto inferior esquerdo, alinhado ao texto (no centro ficava sobre os estilhaços e sumia) */
-.hero__rolar { position: absolute; left: calc((100% - min(100% - 2.5rem, var(--largura))) / 2); bottom: 2.5rem; z-index: 2; display: flex; align-items: center; gap: .75rem; font-family: var(--fonte-titulo); font-size: .66rem; letter-spacing: .3em; text-transform: uppercase; color: rgba(242, 240, 239, .6); transition: color .2s ease; }
-.hero__rolar:hover { color: var(--laranja-2); }
-.hero__rolar-mouse { position: relative; width: 22px; height: 34px; border: 2px solid currentColor; border-radius: 12px; }
-.hero__rolar-mouse::after { content: ""; position: absolute; left: 50%; top: 6px; width: 3px; height: 7px; margin-left: -1.5px; border-radius: 2px; background: var(--laranja); animation: rolar 1.8s var(--ease-premium) infinite; }
-@keyframes rolar { 0% { transform: translateY(0); opacity: 1; } 70% { transform: translateY(10px); opacity: 0; } 100% { transform: translateY(0); opacity: 0; } }
 section h2[id] { scroll-margin-top: 7rem; }
 .lead { margin: 1.75rem 0 0; font-size: clamp(1.05rem, 1.6vw, 1.2rem); max-width: 34rem; color: rgba(242, 240, 239, .86); }
 .acoes { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.5rem; }
@@ -382,7 +375,6 @@ section h2[id] { scroll-margin-top: 7rem; }
   .hero__vertical { display: none; }
   .hero__atleta-caixa { left: 20%; top: 2%; width: 100%; }
   .hero__luz { left: 72%; top: 18%; width: 90%; height: 45%; }
-  .hero__rolar { display: none; }
 }
 
 /* ===== Letreiro (FaixaLetreiro.tsx): faixa laranja inclinada entre a Hero e a próxima seção ===== */
@@ -394,13 +386,7 @@ section h2[id] { scroll-margin-top: 7rem; }
   box-shadow: 0 18px 40px -18px rgba(232, 85, 15, .75);
 }
 .letreiro__trilho { display: flex; width: max-content; animation: letreiro 38s linear infinite; }
-.letreiro__faixa:hover .letreiro__trilho, .letreiro--pausado .letreiro__trilho { animation-play-state: paused; }
-/* Botão de pausa no fim da faixa (WCAG 2.2.2: movimento contínuo precisa de controle) */
-.letreiro__faixa { position: relative; }
-.letreiro__pausa { position: absolute; right: calc(2rem + max(1rem, (100vw - var(--largura)) / 2 - 2.5rem)); top: 50%; translate: 0 -50%; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 2px solid var(--preto); border-radius: 50%; background: var(--laranja-2); color: var(--preto); cursor: pointer; transition: background .2s ease, color .2s ease; }
-.letreiro__pausa:hover { background: var(--preto); color: var(--laranja-2); }
-.letreiro__pausa:focus-visible { outline-color: var(--gelo); }
-.letreiro__pausa svg { width: 18px; height: 18px; fill: currentColor; }
+.letreiro__faixa:hover .letreiro__trilho { animation-play-state: paused; }
 .letreiro__item { display: inline-flex; align-items: center; gap: 1.6rem; padding-right: 1.6rem; white-space: nowrap; font-family: var(--fonte-titulo); font-weight: 600; font-size: clamp(1.35rem, 3vw, 2.1rem); line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
 .letreiro__item--vazado { color: transparent; -webkit-text-stroke: 1.3px var(--preto); }
 .letreiro__sep { width: .5em; height: .5em; flex: none; background: var(--preto); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }

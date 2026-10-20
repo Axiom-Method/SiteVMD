@@ -36,11 +36,6 @@ export async function Hero() {
           </ButtonLink>
         </div>
       </div>
-
-      <a href="#quem-somos" className="hero__rolar" aria-label={t.hero.rolarRotulo}>
-        <span className="hero__rolar-mouse" aria-hidden="true" />
-        <span aria-hidden="true">{t.hero.rolar}</span>
-      </a>
     </section>
   );
 }

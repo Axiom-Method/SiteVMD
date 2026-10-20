@@ -44,8 +44,6 @@ export const en: Dicionario = {
     lead: "Specialised management that strengthens athletes' image, positioning and value.",
     cta: "Join VMD",
     conhecerAtletas: "Meet the athletes",
-    rolarRotulo: "Scroll to the next section",
-    rolar: "Scroll",
     posterSobre: "Your game",
     posterSelo: "Season 26",
     posterSob: "On another level",
@@ -54,8 +52,6 @@ export const en: Dicionario = {
 
   letreiro: {
     palavras: ["Image", "Positioning", "Value", "Media day", "Video production", "Visual identity", "Media kit", "Career management"],
-    pausar: "Pause ticker animation",
-    retomar: "Resume ticker animation",
   },
 
   quemSomos: {
