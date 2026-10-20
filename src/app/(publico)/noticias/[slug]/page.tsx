@@ -80,11 +80,14 @@ export default async function NoticiaPage({ params }: Props) {
       </article>
 
       {outras.length > 0 && (
-        <section className="secao secao--clara" aria-labelledby="outras-noticias">
+        <section className="secao secao--escura" aria-labelledby="outras-noticias">
           <div className="container">
-            <h2 id="outras-noticias" className="titulo-secao titulo-secao--pequeno">
-              <Destaque a={t.noticias.outrasA} b={t.noticias.outrasB} />
-            </h2>
+            <Revelar>
+              <p className="eyebrow">Continue lendo</p>
+              <h2 id="outras-noticias" className="titulo-secao titulo-secao--pequeno">
+                Outras <span className="destaque">notícias</span>
+              </h2>
+            </Revelar>
             <div className="grade grade--3">
               {outras.map((n) => (
                 <CardNoticia key={n.slug} noticia={n} />
