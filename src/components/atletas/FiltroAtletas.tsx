@@ -21,8 +21,9 @@ import { MODALIDADES } from "@/validations/atleta.schema";
  */
 type Campo = keyof Filtros;
 
+/** Valores existentes de um campo (sem os ainda não informados), em ordem alfabética. */
 const unicos = (lista: PerfilAtleta[], campo: "posicao" | "categoria" | "clube") =>
-  [...new Set(lista.map((a) => a[campo]))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  [...new Set(lista.flatMap((a) => (a[campo] ? [a[campo]] : [])))].sort((a, b) => a.localeCompare(b, "pt-BR"));
 
 const normalizar = (t: string) => t.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
 

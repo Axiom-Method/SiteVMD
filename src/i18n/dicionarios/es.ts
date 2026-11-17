@@ -191,11 +191,13 @@ export const es: Dicionario = {
     variosEncontrados: "{n} atletas encontrados",
     vazio: "Ningún atleta coincide con estos filtros. Prueba otra combinación.",
     cardRotulo: "{nome}, {posicao}, {categoria}, {clube}. Ver perfil",
+    cardRotuloSimples: "{nome}, {clube}. Ver perfil",
   },
 
   perfil: {
     naoEncontrado: "Atleta no encontrado",
     metaDescricao: "{nome}, {posicao} {categoria} de {clube}. Perfil, números y vídeos.",
+    metaDescricaoSimples: "{nome}, atleta de {clube}. Perfil, números y vídeos.",
     voltar: "Todos los atletas",
     ficha: {
       posicao: "Posición",
@@ -213,6 +215,7 @@ export const es: Dicionario = {
     verVideos: "Ver vídeos",
     aviso: "El contacto se hace a través de VMD, que protege los datos del atleta.",
     mensagem: "¡Hola! Soy entrenador/ojeador y me interesa el atleta {nome} ({posicao}, {categoria}). Vi el perfil en el sitio web de VMD.",
+    mensagemSimples: "¡Hola! Soy entrenador/ojeador y me interesa el atleta {nome} ({clube}). Vi el perfil en el sitio web de VMD.",
     temporada: "Temporada {ano}",
     numerosA: "Números del",
     numerosB: "atleta",

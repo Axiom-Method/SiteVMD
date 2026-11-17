@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!atleta) return { title: t.perfil.naoEncontrado };
   return {
     title: atleta.nome,
-    description: preencher(t.perfil.metaDescricao, {
+    description: preencher(atleta.posicao && atleta.categoria ? t.perfil.metaDescricao : t.perfil.metaDescricaoSimples, {
       nome: atleta.nome,
       posicao: traduzirValor(t, "posicoes", atleta.posicao).toLowerCase(),
       categoria: traduzirCategoria(t, atleta.categoria),
@@ -50,18 +50,27 @@ export default async function PerfilAtletaPage({ params }: Props) {
 
   const posicao = traduzirValor(t, "posicoes", atleta.posicao);
   const categoria = traduzirCategoria(t, atleta.categoria);
-  const altura = formatarNumero(atleta.alturaCm / 100, idioma, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const altura =
+    atleta.alturaCm && formatarNumero(atleta.alturaCm / 100, idioma, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // Só entra na ficha o que já foi informado
   const ficha = [
     { rotulo: t.perfil.ficha.posicao, valor: posicao },
     { rotulo: t.perfil.ficha.categoria, valor: categoria },
-    { rotulo: t.perfil.ficha.camisa, valor: String(atleta.numero) },
-    { rotulo: t.perfil.ficha.altura, valor: `${altura} m` },
-    { rotulo: t.perfil.ficha.peso, valor: `${atleta.pesoKg} kg` },
+    { rotulo: t.perfil.ficha.camisa, valor: atleta.numero ? String(atleta.numero) : "" },
+    { rotulo: t.perfil.ficha.altura, valor: altura ? `${altura} m` : "" },
+    { rotulo: t.perfil.ficha.peso, valor: atleta.pesoKg ? `${atleta.pesoKg} kg` : "" },
     { rotulo: t.perfil.ficha.pe, valor: traduzirValor(t, "pe", atleta.pe) },
     { rotulo: t.perfil.ficha.nacionalidade, valor: traduzirValor(t, "nacionalidades", atleta.nacionalidade) },
     { rotulo: t.perfil.ficha.clube, valor: atleta.clube },
-  ];
-  const mensagem = preencher(t.perfil.mensagem, { nome: atleta.nome, posicao, categoria });
+  ].filter((f) => f.valor);
+  const mensagem = preencher(posicao && categoria ? t.perfil.mensagem : t.perfil.mensagemSimples, {
+    nome: atleta.nome,
+    posicao,
+    categoria,
+    clube: atleta.clube,
+  });
+  const eyebrow = [posicao, categoria].filter(Boolean).join(" · ");
+  const sigla = siglaPosicao(t, atleta.posicao);
 
   return (
     <>
@@ -69,11 +78,11 @@ export default async function PerfilAtletaPage({ params }: Props) {
         dados={{
           "@type": "Person",
           name: atleta.nome,
-          description: atleta.bio,
-          jobTitle: `${atleta.posicao} (${atleta.categoria})`,
-          height: { "@type": "QuantitativeValue", value: atleta.alturaCm, unitCode: "CMT" },
-          nationality: atleta.nacionalidade,
-          memberOf: { "@type": "SportsTeam", name: atleta.clube, sport: atleta.esporte },
+          ...(atleta.bio && { description: atleta.bio }),
+          ...(atleta.posicao && { jobTitle: atleta.categoria ? `${atleta.posicao} (${atleta.categoria})` : atleta.posicao }),
+          ...(atleta.alturaCm && { height: { "@type": "QuantitativeValue", value: atleta.alturaCm, unitCode: "CMT" } }),
+          ...(atleta.nacionalidade && { nationality: atleta.nacionalidade }),
+          memberOf: { "@type": "SportsTeam", name: atleta.clube, ...(atleta.esporte && { sport: atleta.esporte }) },
         }}
       />
       <Holofote />
@@ -89,17 +98,16 @@ export default async function PerfilAtletaPage({ params }: Props) {
             <CardFifa atleta={atleta} />
 
             <Revelar className="perfil__info" atraso={0.2}>
-              <p className="eyebrow">
-                {posicao} · {categoria}
-              </p>
+              {eyebrow && <p className="eyebrow">{eyebrow}</p>}
               <h1 id="perfil-nome" className="perfil__nome">
                 {atleta.nome}
               </h1>
               <p className="perfil__clube">
-                <span className="perfil__sigla">{siglaPosicao(t, atleta.posicao)}</span>
-                {atleta.clube} · {preencher(t.perfil.camisa, { n: atleta.numero })}
+                {sigla && <span className="perfil__sigla">{sigla}</span>}
+                {atleta.clube}
+                {atleta.numero ? ` · ${preencher(t.perfil.camisa, { n: atleta.numero })}` : ""}
               </p>
-              <p className="perfil__bio">{atleta.bio}</p>
+              {atleta.bio && <p className="perfil__bio">{atleta.bio}</p>}
 
               <dl className="ficha">
                 {ficha.map((f) => (

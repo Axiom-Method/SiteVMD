@@ -831,10 +831,11 @@ body::after {
 .card-fifa__pais { padding: .2rem .4rem; border-radius: 3px; font-size: .72rem; letter-spacing: .1em; color: #fff; background: linear-gradient(180deg, #2f9e44, #1d7a32); box-shadow: 0 1px 2px rgba(0, 0, 0, .35); }
 .card-fifa__clube { display: grid; place-items: center; width: 34px; height: 34px; margin-top: .3rem; border-radius: 50%; border: 1.5px solid #a8822f; background: rgba(255, 255, 255, .6); font-size: .72rem; color: var(--tinta); }
 /* Sem notas: a foto ocupa o card inteiro e dissolve atrás do nome, já perto da base */
+/* Foto real do atleta (com fundo): cobre a face do card e some no mármore antes do nome */
 .card-fifa__foto {
-  position: absolute; right: -18%; top: 4%; width: 136%; height: auto; max-width: none;
-  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .3));
-  -webkit-mask-image: linear-gradient(to bottom, #000 66%, transparent 82%); mask-image: linear-gradient(to bottom, #000 66%, transparent 82%);
+  position: absolute; inset: 0 0 auto; width: 100%; height: 84%; max-width: none;
+  object-fit: cover; object-position: 50% 15%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 92%); mask-image: linear-gradient(to bottom, #000 62%, transparent 92%);
 }
 .card-fifa__iniciais { position: absolute; right: 14%; top: 20%; font-family: var(--fonte-titulo); font-size: 5rem; color: rgba(79, 63, 23, .2); }
 .card-fifa__nome {

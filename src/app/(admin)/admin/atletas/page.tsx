@@ -35,9 +35,9 @@ export default async function AdminAtletas() {
           {atletas.map((a) => (
             <tr key={a.slug}>
               <td>{a.nome}</td>
-              <td>{a.esporte}</td>
-              <td>{a.posicao}</td>
-              <td>{a.categoria}</td>
+              <td>{a.esporte ?? "—"}</td>
+              <td>{a.posicao ?? "—"}</td>
+              <td>{a.categoria ?? "—"}</td>
               <td>{ultimaTemporada.get(a.slug) ? `Temporada ${ultimaTemporada.get(a.slug)}` : "Sem números"}</td>
               <td>
                 <Link href={`/admin/atletas/${a.slug}`} className="btn btn--contorno btn--sm">

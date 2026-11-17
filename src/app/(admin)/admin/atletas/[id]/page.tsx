@@ -44,7 +44,7 @@ export default async function AdminNumerosAtleta({ params, searchParams }: Props
       </p>
       <h1 className="admin__titulo">{atleta.nome}</h1>
       <p className="admin__texto">
-        {atleta.esporte} · {atleta.posicao} · {atleta.categoria} · {atleta.clube} ·{" "}
+        {[atleta.esporte, atleta.posicao, atleta.categoria, atleta.clube].filter(Boolean).join(" · ")} ·{" "}
         <Link href={`/atletas/${atleta.slug}`} target="_blank">
           ver perfil público
         </Link>
@@ -68,7 +68,12 @@ export default async function AdminNumerosAtleta({ params, searchParams }: Props
         </button>
       </form>
 
-      {campos.length === 0 ? (
+      {!atleta.esporte ? (
+        <p className="admin-aviso">
+          O esporte e a posição deste atleta ainda não foram informados (src/constants/atletas-destaque.ts). Sem eles, não dá
+          para saber quais números lançar.
+        </p>
+      ) : campos.length === 0 ? (
         <p className="admin-aviso">
           {atleta.esporte} ainda não tem números cadastrados.{" "}
           <Link href={`/admin/numeros#${ancoraEsporte(atleta.esporte)}`}>Cadastrar os números de {atleta.esporte}</Link>.

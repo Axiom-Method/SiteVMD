@@ -96,9 +96,11 @@ export function CarrosselAtletas({ atletas }: { atletas: readonly AtletaResumo[]
                 </span>
               )}
               <span className="atleta-foto__info">
-                <span className="atleta-foto__meta">
-                  {traduzirValor(t, "posicoes", a.posicao)} · {traduzirCategoria(t, a.categoria)}
-                </span>
+                {(a.posicao || a.categoria) && (
+                  <span className="atleta-foto__meta">
+                    {[traduzirValor(t, "posicoes", a.posicao), traduzirCategoria(t, a.categoria)].filter(Boolean).join(" · ")}
+                  </span>
+                )}
                 <span className="atleta-foto__nome">{a.nome}</span>
                 <span className="atleta-foto__clube">{a.clube}</span>
                 <span className="atleta-foto__link">

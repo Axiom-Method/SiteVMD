@@ -30,10 +30,15 @@ export function CardFifa({ atleta, mini = false }: Props) {
   const face = (
     <div className="card-fifa__face">
       <span className="card-fifa__filete" />
+      {/* Posição e país só aparecem depois de informados */}
       <div className="card-fifa__topo">
-        <span className="card-fifa__posicao">{sigla}</span>
-        <span className="card-fifa__divisor" />
-        <span className="card-fifa__pais">{atleta.pais}</span>
+        {sigla && (
+          <>
+            <span className="card-fifa__posicao">{sigla}</span>
+            <span className="card-fifa__divisor" />
+          </>
+        )}
+        {atleta.pais && <span className="card-fifa__pais">{atleta.pais}</span>}
         <span className="card-fifa__clube">{iniciais(atleta.clube)}</span>
       </div>
 
@@ -42,8 +47,8 @@ export function CardFifa({ atleta, mini = false }: Props) {
           className="card-fifa__foto"
           src={atleta.foto}
           alt=""
-          width={1237}
-          height={1271}
+          width={800}
+          height={1140}
           sizes={mini ? "240px" : "300px"}
           priority={!mini}
         />
@@ -64,7 +69,7 @@ export function CardFifa({ atleta, mini = false }: Props) {
       <LinkIdioma
         href={`/atletas/${atleta.slug}`}
         className="card-fifa-mini"
-        aria-label={preencher(t.atletas.cardRotulo, {
+        aria-label={preencher(atleta.posicao && atleta.categoria ? t.atletas.cardRotulo : t.atletas.cardRotuloSimples, {
           nome: atleta.nome,
           posicao: traduzirValor(t, "posicoes", atleta.posicao),
           categoria: traduzirCategoria(t, atleta.categoria),

@@ -1,30 +1,54 @@
 /**
- * MOCK temporário, só para a Home não ficar vazia.
+ * Atletas agenciados exibidos no site (nome, clube e foto vêm da pasta "MÍDIA ATLETAS" do Drive).
  * Substituir por atleta.service.ts (somente atletas com status PUBLICADO).
  * O card público expõe apenas dados não sensíveis.
+ *
+ * Esporte, posição e categoria ainda não foram informados: ficam vazios (o site esconde o que falta)
+ * até serem preenchidos aqui ou pelo painel. Não inventar esses dados.
  */
 import type { MODALIDADES } from "@/validations/atleta.schema";
 
 export type AtletaResumo = {
   slug: string;
   nome: string;
-  /** Esporte (mesma lista do cadastro). */
-  esporte: (typeof MODALIDADES)[number];
-  posicao: string;
-  categoria: string;
   clube: string;
-  /** Foto do próprio atleta, usada como fundo do card. Ex.: /images/atletas/<slug>.webp */
+  /** Esporte (mesma lista do cadastro). */
+  esporte?: (typeof MODALIDADES)[number];
+  posicao?: string;
+  categoria?: string;
+  /** Foto do próprio atleta, recortada na proporção do card (800×1140): /images/atletas/<slug>.webp */
   foto?: string;
 };
 
-// TODO: trocar pela foto real de cada atleta em public/images/atletas/<slug>.webp
-const FOTO_PROVISORIA = "/images/hero-atleta.webp";
+const atleta = (slug: string, nome: string, clube: string): AtletaResumo => ({
+  slug, nome, clube, foto: `/images/atletas/${slug}.webp`,
+});
 
 export const ATLETAS_DESTAQUE: readonly AtletaResumo[] = [
-  { slug: "atleta-exemplo-1", nome: "Atleta Exemplo 1", esporte: "Futebol", posicao: "Atacante", categoria: "Sub-17", clube: "Clube Exemplo", foto: FOTO_PROVISORIA },
-  { slug: "atleta-exemplo-2", nome: "Atleta Exemplo 2", esporte: "Futebol", posicao: "Meio-campo", categoria: "Sub-20", clube: "Clube Exemplo", foto: FOTO_PROVISORIA },
-  { slug: "atleta-exemplo-3", nome: "Atleta Exemplo 3", esporte: "Futebol", posicao: "Zagueiro", categoria: "Sub-15", clube: "Clube Exemplo", foto: FOTO_PROVISORIA },
-  { slug: "atleta-exemplo-4", nome: "Atleta Exemplo 4", esporte: "Futebol", posicao: "Goleiro", categoria: "Profissional", clube: "Clube Exemplo", foto: FOTO_PROVISORIA },
-  { slug: "atleta-exemplo-5", nome: "Atleta Exemplo 5", esporte: "Futebol", posicao: "Lateral", categoria: "Sub-17", clube: "Clube Exemplo", foto: FOTO_PROVISORIA },
-  { slug: "atleta-exemplo-6", nome: "Atleta Exemplo 6", esporte: "Futebol", posicao: "Volante", categoria: "Sub-20", clube: "Clube Exemplo", foto: FOTO_PROVISORIA },
+  atleta("anna-julia", "Anna Júlia", "Stein Cascavel"),
+  atleta("bernardo", "Bernardo", "AGSL"),
+  atleta("choco", "Choco", "Podpah"),
+  atleta("coutinho", "Coutinho", "ATLEC"),
+  atleta("dani-cunha", "Dani Cunha", "Stein Cascavel"),
+  atleta("davi-major", "Davi Major", "DR7 Team"),
+  atleta("drika", "Drika", "EC Taboão"),
+  atleta("fernando-nassar", "Fernando Nassar", "Magnus"),
+  atleta("giovanna-karine", "Giovanna Karine", "Stein Cascavel"),
+  atleta("guilherme-alves", "Guilherme Alves", "Capim"),
+  atleta("jeffinho", "Jeffinho", "Furia"),
+  atleta("joao-urmann", "João Urmann", "ADCP"),
+  atleta("juninho", "Juninho", "Podpah"),
+  atleta("leo-luiz", "Léo Luiz", "Campo Mourão"),
+  atleta("luizinho", "Luizinho", "ACF"),
+  atleta("pedro-vinicius", "Pedro Vinícius", "Magnus"),
+  atleta("renan", "Renan", "Sumqayit FK"),
+  atleta("renato-osorio", "Renato Osório", "Pato Futsal"),
+  atleta("ronald", "Ronald", "Marreco"),
+  atleta("ruan-silvestre", "Ruan Silvestre", "Furia"),
+  atleta("susan-gomes", "Susan Gomes", "Leoas da Serra"),
+  atleta("thalles-lima", "Thalles Lima", "LSCF"),
+  atleta("vanessa", "Vanessa", "Stein Cascavel"),
+  atleta("victor-bolt", "Victor Bolt", "Desimpain"),
+  atleta("vini", "Vini", "Podpah"),
+  atleta("william-bolt", "William Bolt", "ACBF"),
 ];

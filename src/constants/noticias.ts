@@ -42,7 +42,8 @@ export const VIDEO_SEMANA: VideoDestaque = {
   titulo: "Gol decisivo garante a vitória no último minuto",
   tipo: "gol",
   atleta: "Atleta Exemplo 1",
-  atletaSlug: "atleta-exemplo-1",
+  // Vídeos ainda fictícios: sem slug, o link cai na lista de atletas e nenhum perfil real recebe vídeo de exemplo
+  atletaSlug: "",
   competicao: "Copa Exemplo Sub-17",
   data: "2026-10-12",
   duracao: "01:12",
@@ -69,7 +70,7 @@ export const VIDEOS_DESTAQUE: readonly VideoDestaque[] = Array.from({ length: 12
     titulo: b.titulo,
     tipo: b.tipo,
     atleta: `Atleta Exemplo ${n}`,
-    atletaSlug: `atleta-exemplo-${n}`,
+    atletaSlug: "",
     competicao: competicoes[i % competicoes.length],
     data: `2026-10-${String(10 - (i % 9)).padStart(2, "0")}`,
     duracao: `${String(Math.floor(seg / 60)).padStart(2, "0")}:${String(seg % 60).padStart(2, "0")}`,

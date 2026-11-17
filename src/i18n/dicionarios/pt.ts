@@ -201,11 +201,13 @@ export const pt = {
     variosEncontrados: "{n} atletas encontrados",
     vazio: "Nenhum atleta com esses filtros. Tente outra combinação.",
     cardRotulo: "{nome}, {posicao}, {categoria}, {clube}. Ver perfil",
+    cardRotuloSimples: "{nome}, {clube}. Ver perfil",
   },
 
   perfil: {
     naoEncontrado: "Atleta não encontrado",
     metaDescricao: "{nome}, {posicao} {categoria} do {clube}. Perfil, números e vídeos.",
+    metaDescricaoSimples: "{nome}, atleta do {clube}. Perfil, números e vídeos.",
     voltar: "Todos os atletas",
     ficha: {
       posicao: "Posição",
@@ -223,6 +225,7 @@ export const pt = {
     verVideos: "Ver vídeos",
     aviso: "O contato é intermediado pela VMD, que protege os dados do atleta.",
     mensagem: "Olá! Sou técnico/olheiro e tenho interesse no atleta {nome} ({posicao}, {categoria}). Vi o perfil no site da VMD.",
+    mensagemSimples: "Olá! Sou técnico/olheiro e tenho interesse no atleta {nome} ({clube}). Vi o perfil no site da VMD.",
     temporada: "Temporada {ano}",
     numerosA: "Números do",
     numerosB: "atleta",

@@ -9,19 +9,22 @@ import { preencher } from "@/i18n/formatar";
  */
 type Lista = "posicoes" | "siglas" | "modalidades" | "pe" | "nacionalidades" | "estatisticas";
 
-export function traduzirValor(t: Dicionario, lista: Lista, valor: string): string {
+export function traduzirValor(t: Dicionario, lista: Lista, valor: string | undefined): string {
+  if (!valor) return "";
   return t.valores[lista][valor] ?? valor;
 }
 
 /** "Sub-17" → "U-17" / "Under 17"...; "Profissional" → "Professional"... */
-export function traduzirCategoria(t: Dicionario, categoria: string): string {
+export function traduzirCategoria(t: Dicionario, categoria: string | undefined): string {
+  if (!categoria) return "";
   const sub = /^Sub-(\d+)$/.exec(categoria);
   if (sub) return preencher(t.valores.sub, { n: sub[1] });
   return t.valores.categorias[categoria] ?? categoria;
 }
 
-/** Sigla da posição no card; sem tradução, usa as três primeiras letras. */
-export function siglaPosicao(t: Dicionario, posicao: string): string {
+/** Sigla da posição no card; sem tradução, usa as três primeiras letras. Sem posição, vazio. */
+export function siglaPosicao(t: Dicionario, posicao: string | undefined): string {
+  if (!posicao) return "";
   return t.valores.siglas[posicao] ?? posicao.slice(0, 3).toUpperCase();
 }
 
