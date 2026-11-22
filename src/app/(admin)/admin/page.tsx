@@ -28,7 +28,7 @@ export default async function PainelInicio() {
       <h1 className="admin__titulo">Olá, {admin?.nome}</h1>
       <div className="admin-cards">
         <Link href="/admin/atletas" className="admin-card">
-          <strong>{listarPerfis().length}</strong>
+          <strong>{(await listarPerfis({ incluirOcultos: true })).length}</strong>
           <span>Atletas</span>
           <small>Editar os números de cada atleta</small>
         </Link>

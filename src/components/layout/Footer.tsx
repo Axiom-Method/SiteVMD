@@ -46,7 +46,7 @@ export async function Footer() {
             {SITE.instagram && (
               <li>
                 <a href={SITE.instagram} target="_blank" rel="noopener noreferrer" className="footer__contato">
-                  <Icone nome="imagem" />
+                  <Icone nome="instagram" />
                   Instagram
                 </a>
               </li>

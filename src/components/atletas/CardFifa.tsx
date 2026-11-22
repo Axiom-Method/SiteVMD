@@ -4,7 +4,7 @@ import Image from "next/image";
 import type { PerfilAtleta } from "@/constants/atletas-perfil";
 import { LinkIdioma, useTextos } from "@/i18n/cliente";
 import { preencher } from "@/i18n/formatar";
-import { siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
+import { funcaoAtleta, semFuncao, siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
 import { iniciais } from "@/lib/utils";
 
 type Props = {
@@ -31,9 +31,9 @@ export function CardFifa({ atleta, mini = false }: Props) {
     <div className="card-fifa__face">
       <span className="card-fifa__filete" />
       <div className="card-fifa__topo">
-        <span className="card-fifa__posicao">{sigla}</span>
-        <span className="card-fifa__divisor" />
-        <span className="card-fifa__pais">{atleta.pais}</span>
+        {sigla && <span className="card-fifa__posicao">{sigla}</span>}
+        {sigla && <span className="card-fifa__divisor" />}
+        {atleta.pais && <span className="card-fifa__pais">{atleta.pais}</span>}
         <span className="card-fifa__clube">{iniciais(atleta.clube)}</span>
       </div>
 
@@ -64,7 +64,7 @@ export function CardFifa({ atleta, mini = false }: Props) {
       <LinkIdioma
         href={`/atletas/${atleta.slug}`}
         className="card-fifa-mini"
-        aria-label={preencher(t.atletas.cardRotulo, {
+        aria-label={preencher(semFuncao(t.atletas.cardRotulo, funcaoAtleta(t, atleta.posicao, atleta.categoria)), {
           nome: atleta.nome,
           posicao: traduzirValor(t, "posicoes", atleta.posicao),
           categoria: traduzirCategoria(t, atleta.categoria),

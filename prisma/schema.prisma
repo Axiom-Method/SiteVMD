@@ -1,9 +1,8 @@
 // Banco do site (PostgreSQL). A URL fica em DATABASE_URL no .env (nunca no código).
 // Comandos: npm run db:migrar (desenvolvimento) · npm run db:aplicar (produção) · npm run db:seed
 //
-// TODO (próximas etapas): Atleta, VideoAtleta, Plano, Assinatura, Noticia, MidiaNoticia.
-// Por enquanto os atletas continuam em src/constants (mock); o banco guarda os números de cada um
-// pelo slug do atleta.
+// TODO (próximas etapas): VideoAtleta, Plano, Assinatura, Noticia, MidiaNoticia.
+// Atletas e fotos ficam no banco (editados no painel); sem banco, o site usa a lista de src/constants.
 
 generator client {
   provider = "prisma-client-js"
@@ -89,4 +88,51 @@ model LogAuditoria {
   criadoEm DateTime @default(now())
 
   @@index([criadoEm])
+}
+
+/// Atleta representado pela VMD. Campos vazios aparecem no perfil público como "não compartilhado".
+model Atleta {
+  /// Endereço do perfil (/atletas/<slug>); não muda depois de criado
+  slug          String   @id
+  nome          String
+  clube         String
+  /// Valor de MODALIDADES (validations/atleta.schema.ts)
+  esporte       String?
+  posicao       String?
+  categoria     String?
+  numero        Int?
+  alturaCm      Int?
+  pesoKg        Int?
+  /// "Direito" | "Esquerdo" | "Ambidestro"
+  pe            String?
+  nacionalidade String?
+  /// Sigla de 3 letras exibida no card (BRA)
+  pais          String?
+  bio           String?
+  /// Foto do card: /api/imagens/<id> (enviada no painel) ou /images/atletas/<slug>.webp (estática)
+  foto          String?
+  /// Fora do site público enquanto estiver false
+  publicado     Boolean  @default(true)
+  ordem         Int      @default(0)
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+  imagens       Imagem[]
+
+  @@index([ordem])
+}
+
+/// Imagem enviada pelo painel, já convertida em WebP e sem metadados (EXIF/GPS).
+/// Servida por /api/imagens/<id> com cache longo: o conteúdo de um id nunca muda.
+model Imagem {
+  id         String   @id @default(cuid())
+  atletaSlug String?
+  atleta     Atleta?  @relation(fields: [atletaSlug], references: [slug], onDelete: Cascade)
+  tipo       String   @default("image/webp")
+  dados      Bytes
+  largura    Int
+  altura     Int
+  tamanho    Int
+  criadoEm   DateTime @default(now())
+
+  @@index([atletaSlug])
 }

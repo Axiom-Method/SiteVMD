@@ -174,8 +174,8 @@ export const pt = {
 
   ctaFinal: {
     eyebrow: "Próximo passo",
-    tituloA: "Seu desempenho dentro de campo merece uma",
-    tituloB: "presença forte fora dele.",
+    tituloA: "Seu desempenho dentro de quadra merece uma",
+    tituloB: "presença forte fora dela.",
     cadastro: "Cadastre-se agora",
     whatsapp: "Falar no WhatsApp",
     mensagem: "Olá! Vim pelo site da VMD e quero saber como fortalecer minha imagem como atleta.",
@@ -208,6 +208,7 @@ export const pt = {
     metaDescricao: "{nome}, {posicao} {categoria} do {clube}. Perfil, números e vídeos.",
     voltar: "Todos os atletas",
     ficha: {
+      esporte: "Esporte",
       posicao: "Posição",
       categoria: "Categoria",
       camisa: "Camisa",
@@ -218,6 +219,10 @@ export const pt = {
       clube: "Clube",
     },
     camisa: "Camisa {n}",
+    naoCompartilhado: "Não compartilhado",
+    fichaTitulo: "Ficha técnica",
+    contatoTitulo: "Interessado neste atleta?",
+    sobre: "Sobre o atleta",
     conquistas: "Conquistas",
     interesse: "Tenho interesse",
     verVideos: "Ver vídeos",
@@ -476,8 +481,11 @@ export const pt = {
       Goleiro: "Goleiro",
       Lateral: "Lateral",
       Volante: "Volante",
+      Fixo: "Fixo",
+      Ala: "Ala",
+      "Pivô": "Pivô",
     } as Record<string, string>,
-    siglas: { Atacante: "ATA", "Meio-campo": "MEI", Zagueiro: "ZAG", Goleiro: "GOL", Lateral: "LAT", Volante: "VOL" } as Record<string, string>,
+    siglas: { Atacante: "ATA", "Meio-campo": "MEI", Zagueiro: "ZAG", Goleiro: "GOL", Lateral: "LAT", Volante: "VOL", Fixo: "FIX", Ala: "ALA", "Pivô": "PIV" } as Record<string, string>,
     modalidades: {
       Futebol: "Futebol",
       Futsal: "Futsal",

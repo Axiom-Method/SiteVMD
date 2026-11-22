@@ -10,7 +10,7 @@ import { Servicos } from "@/components/home/Servicos";
 import { TecnicosOlheiros } from "@/components/home/TecnicosOlheiros";
 import { DadosEstruturados } from "@/components/seo/DadosEstruturados";
 import { Holofote } from "@/components/ui/Holofote";
-import { ATLETAS_DESTAQUE } from "@/constants/atletas-destaque";
+import { listarAtletas } from "@/services/atleta.service";
 import { SITE } from "@/constants/site";
 import { alternativas } from "@/i18n/config";
 import { obterTextos } from "@/i18n/servidor";
@@ -27,8 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const { t } = await obterTextos();
-  // TODO: trocar por atletaService.listarDestaques() (apenas status PUBLICADO).
-  const atletas = ATLETAS_DESTAQUE;
+  // Só atletas publicados (banco) ou a lista de src/constants (sem banco).
+  const atletas = await listarAtletas();
 
   return (
     <>
