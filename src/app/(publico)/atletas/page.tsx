@@ -18,7 +18,7 @@ type Props = { searchParams: Promise<Record<string, string | string[] | undefine
 
 export default async function AtletasPage({ searchParams }: Props) {
   // TODO: trocar por atletaService.listarPublicados() (só status PUBLICADO), com filtros validados no servidor
-  const atletas = listarPerfis();
+  const atletas = await listarPerfis();
   const { t } = await obterTextos();
   const params = await searchParams;
   // Filtros iniciais vindos da URL: só texto curto; valores fora das opções simplesmente não casam

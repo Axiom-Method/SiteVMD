@@ -1,10 +1,10 @@
 /**
  * Dados iniciais: os números padrão de cada esporte (e das posições que têm os seus)
- * e os números dos atletas de exemplo. Roda com `npm run db:seed`.
+ * e os atletas de src/constants. Roda com `npm run db:seed`.
  * Só cria o que ainda não existe: rodar de novo não duplica nem apaga o que o admin alterou.
  */
 import { PrismaClient } from "@prisma/client";
-import { listarPerfis } from "../src/constants/atletas-perfil";
+import { ATLETAS_DESTAQUE } from "../src/constants/atletas-destaque";
 
 const db = new PrismaClient();
 
@@ -48,19 +48,12 @@ async function main() {
     console.log(`campos: ${esporte}${posicao ? ` / ${posicao}` : ""} (${campos.length})`);
   }
 
-  // Números dos atletas de exemplo, ligados aos campos pelo rótulo
-  for (const atleta of listarPerfis()) {
-    const temValores = await db.estatisticaAtleta.count({ where: { atletaSlug: atleta.slug } });
-    if (temValores > 0) continue;
-    const daPosicao = await db.campoEstatistica.findMany({ where: { esporte: atleta.esporte, posicao: atleta.posicao } });
-    const campos = daPosicao.length ? daPosicao : await db.campoEstatistica.findMany({ where: { esporte: atleta.esporte, posicao: null } });
-    const porRotulo = new Map(campos.map((c) => [c.rotulo, c.id]));
-    const data = atleta.estatisticas.flatMap((e) => {
-      const campoId = porRotulo.get(e.rotulo);
-      return campoId ? [{ atletaSlug: atleta.slug, temporada: atleta.temporada, campoId, valor: e.valor }] : [];
-    });
-    if (data.length) await db.estatisticaAtleta.createMany({ data });
-    console.log(`números: ${atleta.slug} (${data.length})`);
+  // Atletas: entram com nome, clube e foto; o resto o admin preenche no painel
+  for (const [ordem, a] of ATLETAS_DESTAQUE.entries()) {
+    const existe = await db.atleta.findUnique({ where: { slug: a.slug }, select: { slug: true } });
+    if (existe) continue;
+    await db.atleta.create({ data: { slug: a.slug, nome: a.nome, clube: a.clube, foto: a.foto ?? null, ordem } });
+    console.log(`atleta: ${a.slug}`);
   }
 }
 

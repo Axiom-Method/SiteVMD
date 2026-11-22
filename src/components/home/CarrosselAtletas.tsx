@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import type { AtletaResumo } from "@/constants/atletas-destaque";
 import { LinkIdioma, useTextos } from "@/i18n/cliente";
-import { traduzirCategoria, traduzirValor } from "@/i18n/valores";
+import { funcaoAtleta } from "@/i18n/valores";
 import { iniciais } from "@/lib/utils";
 
 /**
@@ -96,9 +96,9 @@ export function CarrosselAtletas({ atletas }: { atletas: readonly AtletaResumo[]
                 </span>
               )}
               <span className="atleta-foto__info">
-                <span className="atleta-foto__meta">
-                  {traduzirValor(t, "posicoes", a.posicao)} · {traduzirCategoria(t, a.categoria)}
-                </span>
+                {(a.posicao || a.categoria) && (
+                  <span className="atleta-foto__meta">{funcaoAtleta(t, a.posicao, a.categoria)}</span>
+                )}
                 <span className="atleta-foto__nome">{a.nome}</span>
                 <span className="atleta-foto__clube">{a.clube}</span>
                 <span className="atleta-foto__link">

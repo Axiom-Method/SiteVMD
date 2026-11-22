@@ -11,8 +11,10 @@ import { bancoConfigurado, db } from "@/lib/db";
 
 const ORDEM = [{ ordem: "asc" as const }, { criadoEm: "asc" as const }];
 
-export async function camposDoAtleta(esporte: string, posicao: string): Promise<CampoEstatistica[]> {
-  const daPosicao = await db.campoEstatistica.findMany({ where: { esporte, posicao }, orderBy: ORDEM });
+export async function camposDoAtleta(esporte?: string, posicao?: string): Promise<CampoEstatistica[]> {
+  // Sem esporte informado, ainda não há quais números mostrar
+  if (!esporte) return [];
+  const daPosicao = !posicao ? [] : await db.campoEstatistica.findMany({ where: { esporte, posicao }, orderBy: ORDEM });
   if (daPosicao.length > 0) return daPosicao;
   return db.campoEstatistica.findMany({ where: { esporte, posicao: null }, orderBy: ORDEM });
 }

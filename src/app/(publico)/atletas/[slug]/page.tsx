@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import type { CSSProperties } from "react";
 import { notFound } from "next/navigation";
 import { CardFifa } from "@/components/atletas/CardFifa";
 import { NumerosTemporada } from "@/components/atletas/Estatisticas";
@@ -12,28 +14,31 @@ import { Destaque } from "@/components/ui/Destaque";
 import { Revelar } from "@/components/ui/Revelar";
 import { buscarPerfil } from "@/constants/atletas-perfil";
 import { linkWhatsApp } from "@/constants/site";
+import { iniciais } from "@/lib/utils";
 import { alternativas } from "@/i18n/config";
 import { LinkIdioma } from "@/i18n/cliente";
 import { formatarNumero, preencher } from "@/i18n/formatar";
 import { obterTextos } from "@/i18n/servidor";
 import { numerosDoAtleta } from "@/services/estatistica.service";
-import { siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
+import { funcaoAtleta, semFuncao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const atleta = buscarPerfil(slug);
+  const atleta = await buscarPerfil(slug);
   const { idioma, t } = await obterTextos();
   if (!atleta) return { title: t.perfil.naoEncontrado };
   return {
     title: atleta.nome,
-    description: preencher(t.perfil.metaDescricao, {
-      nome: atleta.nome,
-      posicao: traduzirValor(t, "posicoes", atleta.posicao).toLowerCase(),
-      categoria: traduzirCategoria(t, atleta.categoria),
-      clube: atleta.clube,
-    }),
+    description: atleta.posicao
+      ? preencher(t.perfil.metaDescricao, {
+          nome: atleta.nome,
+          posicao: traduzirValor(t, "posicoes", atleta.posicao).toLowerCase(),
+          categoria: traduzirCategoria(t, atleta.categoria),
+          clube: atleta.clube,
+        })
+      : `${atleta.nome} · ${atleta.clube}`,
     alternates: alternativas(idioma, `/atletas/${atleta.slug}`),
     openGraph: { type: "profile", title: `${atleta.nome} | VMD` },
   };
@@ -41,8 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PerfilAtletaPage({ params }: Props) {
   const { slug } = await params;
-  // TODO: trocar por atletaService.buscarPublicado(slug) (só status PUBLICADO)
-  const atleta = buscarPerfil(slug);
+  // Só atletas publicados (atleta.service)
+  const atleta = await buscarPerfil(slug);
   if (!atleta) notFound();
   const { idioma, t } = await obterTextos();
   // Números vêm do banco (editados no painel admin); sem banco, os de exemplo
@@ -50,18 +55,27 @@ export default async function PerfilAtletaPage({ params }: Props) {
 
   const posicao = traduzirValor(t, "posicoes", atleta.posicao);
   const categoria = traduzirCategoria(t, atleta.categoria);
-  const altura = formatarNumero(atleta.alturaCm / 100, idioma, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const ficha = [
-    { rotulo: t.perfil.ficha.posicao, valor: posicao },
-    { rotulo: t.perfil.ficha.categoria, valor: categoria },
-    { rotulo: t.perfil.ficha.camisa, valor: String(atleta.numero) },
-    { rotulo: t.perfil.ficha.altura, valor: `${altura} m` },
-    { rotulo: t.perfil.ficha.peso, valor: `${atleta.pesoKg} kg` },
+  const altura = atleta.alturaCm
+    ? `${formatarNumero(atleta.alturaCm / 100, idioma, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} m`
+    : "";
+  const funcao = funcaoAtleta(t, atleta.posicao, atleta.categoria);
+  // Linha de identificação acima do nome: posição e esporte (o número da camisa vai num selo ao lado)
+  const meta = [posicao, traduzirValor(t, "modalidades", atleta.esporte)].filter(Boolean).join(" · ");
+  // Especificações (faixa abaixo do topo). O clube entra aqui, sem destaque; o que faltar aparece como "não compartilhado"
+  const specs = [
+    { rotulo: t.perfil.ficha.altura, valor: altura },
+    { rotulo: t.perfil.ficha.peso, valor: atleta.pesoKg ? `${atleta.pesoKg} kg` : "" },
     { rotulo: t.perfil.ficha.pe, valor: traduzirValor(t, "pe", atleta.pe) },
     { rotulo: t.perfil.ficha.nacionalidade, valor: traduzirValor(t, "nacionalidades", atleta.nacionalidade) },
+    { rotulo: t.perfil.ficha.categoria, valor: categoria },
     { rotulo: t.perfil.ficha.clube, valor: atleta.clube },
   ];
-  const mensagem = preencher(t.perfil.mensagem, { nome: atleta.nome, posicao, categoria });
+  // Nome: primeiro nome mais leve, o resto em negrito. O tamanho acompanha a maior palavra (--letras),
+  // para nenhuma palavra ser quebrada no meio; nomes longos quebram entre palavras, equilibrados.
+  const [primeiroNome, ...resto] = atleta.nome.split(" ");
+  const sobrenome = resto.join(" ");
+  const letras = Math.max(...atleta.nome.split(" ").map((p) => p.length), 5);
+  const mensagem = preencher(semFuncao(t.perfil.mensagem, funcao), { nome: atleta.nome, posicao, categoria });
 
   return (
     <>
@@ -70,84 +84,129 @@ export default async function PerfilAtletaPage({ params }: Props) {
           "@type": "Person",
           name: atleta.nome,
           description: atleta.bio,
-          jobTitle: `${atleta.posicao} (${atleta.categoria})`,
-          height: { "@type": "QuantitativeValue", value: atleta.alturaCm, unitCode: "CMT" },
+          jobTitle: funcao || undefined,
+          height: atleta.alturaCm ? { "@type": "QuantitativeValue", value: atleta.alturaCm, unitCode: "CMT" } : undefined,
           nationality: atleta.nacionalidade,
           memberOf: { "@type": "SportsTeam", name: atleta.clube, sport: atleta.esporte },
         }}
       />
       <Holofote />
 
-      {/* Card + ficha */}
-      <section className="secao perfil" aria-labelledby="perfil-nome">
-        <FundoEsportivo tipo="campo" />
+      {/* Topo: identificação, números e ações à esquerda; a foto do atleta à direita */}
+      <section className="atleta" aria-labelledby="perfil-nome">
         <div className="container">
           <LinkIdioma href="/atletas" className="perfil__voltar">
             <span aria-hidden="true">←</span> {t.perfil.voltar}
           </LinkIdioma>
-          <div className="perfil__grade">
-            <CardFifa atleta={atleta} />
 
-            <Revelar className="perfil__info" atraso={0.2}>
-              <p className="eyebrow">
-                {posicao} · {categoria}
+          <div className="atleta__grade">
+            <Revelar className="atleta__texto">
+              <p className="atleta__meta">
+                {atleta.numero !== undefined && (
+                  <span className="atleta__numero">
+                    <span className="sr-only">{t.perfil.ficha.camisa} </span>
+                    <span aria-hidden="true">#</span>
+                    {atleta.numero}
+                  </span>
+                )}
+                <span>{meta || t.perfil.atletaPadrao}</span>
               </p>
-              <h1 id="perfil-nome" className="perfil__nome">
-                {atleta.nome}
+              <h1 id="perfil-nome" className="atleta__nome" style={{ "--letras": letras } as CSSProperties}>
+                {sobrenome ? (
+                  <>
+                    <span className="atleta__primeiro">{primeiroNome}</span> <span className="atleta__sobrenome">{sobrenome}</span>
+                  </>
+                ) : (
+                  <span className="atleta__sobrenome">{primeiroNome}</span>
+                )}
               </h1>
-              <p className="perfil__clube">
-                <span className="perfil__sigla">{siglaPosicao(t, atleta.posicao)}</span>
-                {atleta.clube} · {preencher(t.perfil.camisa, { n: atleta.numero })}
-              </p>
-              <p className="perfil__bio">{atleta.bio}</p>
+              {atleta.bio && <p className="atleta__bio">{atleta.bio}</p>}
 
-              <dl className="ficha">
-                {ficha.map((f) => (
-                  <div key={f.rotulo} className="ficha__item">
-                    <dt>{f.rotulo}</dt>
-                    <dd>{f.valor}</dd>
-                  </div>
-                ))}
-              </dl>
-
-              {atleta.conquistas.length > 0 && (
-                <ul className="conquistas" aria-label={t.perfil.conquistas}>
-                  {atleta.conquistas.map((c) => (
-                    <li key={c}>{c}</li>
-                  ))}
-                </ul>
-              )}
+              {/* Números da temporada (sem notas/atributos: o site não compara atletas por nota) */}
+              <div className="atleta__numeros" aria-labelledby="numeros">
+                <h2 id="numeros" className="atleta__rotulo">
+                  {preencher(t.perfil.temporada, { ano: numeros.temporada })}
+                </h2>
+                <NumerosTemporada estatisticas={numeros.estatisticas.slice(0, 4)} />
+              </div>
 
               <div className="acoes">
-                <ButtonLink href={linkWhatsApp(mensagem)} className="btn--seta btn--brilho">
+                <ButtonLink href={linkWhatsApp(mensagem)} className="btn--seta">
                   {t.perfil.interesse}
                   <Icone nome="seta" className="btn__seta" />
                 </ButtonLink>
-                <ButtonLink href="#videos" variant="contorno">
-                  {t.perfil.verVideos}
-                </ButtonLink>
+                {atleta.videos.length > 0 && (
+                  <ButtonLink href="#videos" variant="contorno">
+                    {t.perfil.verVideos}
+                  </ButtonLink>
+                )}
               </div>
-              <p className="perfil__aviso">{t.perfil.aviso}</p>
             </Revelar>
+
+            <figure className="atleta__foto">
+              {atleta.foto ? (
+                <Image src={atleta.foto} alt={atleta.nome} fill priority sizes="(max-width: 900px) 92vw, 460px" className="atleta__img" />
+              ) : (
+                <span className="atleta__iniciais" aria-hidden="true">
+                  {iniciais(atleta.nome)}
+                </span>
+              )}
+            </figure>
           </div>
         </div>
+
+        {/* Ficha técnica: bloco de destaque logo abaixo do topo, valores grandes e rótulos claros */}
+        <section className="container atleta__ficha" aria-labelledby="ficha-titulo">
+          <h2 id="ficha-titulo" className="atleta__rotulo">
+            {t.perfil.fichaTitulo}
+          </h2>
+          <dl className="specs">
+            {specs.map((d) => (
+              <div key={d.rotulo} className={d.valor ? "spec" : "spec spec--vazio"}>
+                <dt>{d.rotulo}</dt>
+                <dd>{d.valor || t.perfil.naoCompartilhado}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
       </section>
 
-      {/* Números da temporada (sem notas/atributos: o site não compara atletas por nota) */}
-      <section className="secao secao--escura" aria-labelledby="numeros">
-        <FundoEsportivo tipo="pista" />
-        <div className="container">
-          <Revelar>
-            <p className="eyebrow">{preencher(t.perfil.temporada, { ano: numeros.temporada })}</p>
-            <h2 id="numeros" className="titulo-secao titulo-secao--pequeno">
-              <Destaque a={t.perfil.numerosA} b={t.perfil.numerosB} />
+      {atleta.conquistas.length > 0 && (
+        <section className="secao" aria-labelledby="conquistas-titulo">
+          <div className="container">
+            <h2 id="conquistas-titulo" className="titulo-secao titulo-secao--pequeno">
+              {t.perfil.conquistas}
             </h2>
+            <ul className="conquistas">
+              {atleta.conquistas.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* Cartinha do atleta e o contato intermediado pela VMD */}
+      <section className="atleta-contato" aria-labelledby="contato-titulo">
+        <div className="container atleta-contato__grade">
+          <CardFifa atleta={atleta} />
+          <Revelar className="atleta-contato__texto">
+            <h2 id="contato-titulo" className="titulo-secao titulo-secao--pequeno">
+              {t.perfil.contatoTitulo}
+            </h2>
+            <p className="perfil__aviso">{t.perfil.aviso}</p>
+            <div className="acoes">
+              <ButtonLink href={linkWhatsApp(mensagem)} className="btn--seta">
+                {t.perfil.interesse}
+                <Icone nome="seta" className="btn__seta" />
+              </ButtonLink>
+            </div>
           </Revelar>
-          <NumerosTemporada estatisticas={numeros.estatisticas} />
         </div>
       </section>
 
       {/* Vídeos */}
+      {atleta.videos.length > 0 && (
       <section id="videos" className="secao" aria-labelledby="videos-titulo">
         <FundoEsportivo tipo="raias" />
         <div className="container">
@@ -160,6 +219,7 @@ export default async function PerfilAtletaPage({ params }: Props) {
           <GaleriaVideos videos={atleta.videos} />
         </div>
       </section>
+      )}
     </>
   );
 }

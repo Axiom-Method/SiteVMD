@@ -1,7 +1,7 @@
 export const SITE = {
   nome: "VMD",
   // Deixe vazio para não renderizar o link no rodapé.
-  instagram: "",
+  instagram: "https://www.instagram.com/vmdassessoria/",
   // WhatsApp comercial: só dígitos, com DDI (55) + DDD.
   whatsapp: "5521984579102",
 } as const;

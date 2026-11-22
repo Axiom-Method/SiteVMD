@@ -11,12 +11,12 @@ function emTodosIdiomas(caminho: string, extra: Omit<MetadataRoute.Sitemap[numbe
   return IDIOMAS.map((i) => ({ url: `${BASE}${localizar(i, caminho)}`, alternates: { languages }, ...extra }));
 }
 
-// TODO: quando houver banco, listar só atletas e notícias PUBLICADOS (services).
-export default function sitemap(): MetadataRoute.Sitemap {
+// Atletas: só os publicados (atleta.service). TODO: notícias PUBLICADAS quando forem para o banco.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const fixas = ["/", "/atletas", "/noticias", "/cadastro", "/privacidade"].flatMap((rota) =>
     emTodosIdiomas(rota, { changeFrequency: "weekly", priority: rota === "/" ? 1 : 0.7 }),
   );
-  const atletas = slugsDosPerfis().flatMap((slug) => emTodosIdiomas(`/atletas/${slug}`, { changeFrequency: "weekly", priority: 0.8 }));
+  const atletas = (await slugsDosPerfis()).flatMap((slug) => emTodosIdiomas(`/atletas/${slug}`, { changeFrequency: "weekly", priority: 0.8 }));
   const noticias = NOTICIAS.flatMap((n) =>
     emTodosIdiomas(`/noticias/${n.slug}`, { lastModified: n.data, changeFrequency: "monthly", priority: 0.5 }),
   );

@@ -53,6 +53,13 @@ const CAMINHOS = {
       <path d="m21 15-5-5L5 21" />
     </>
   ),
+  instagram: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M17.5 6.5h.01" />
+    </>
+  ),
   megafone: <path d="M3 10.5v3a1 1 0 0 0 1 1h2.5L12 19V5L6.5 9.5H4a1 1 0 0 0-1 1ZM16 8.8a4 4 0 0 1 0 6.4M19 5.8a8 8 0 0 1 0 12.4" />,
   maleta: (
     <>

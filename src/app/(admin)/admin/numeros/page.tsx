@@ -60,7 +60,7 @@ export default async function AdminNumeros({ searchParams }: Props) {
     orderBy: [{ esporte: "asc" }, { posicao: "asc" }, { ordem: "asc" }, { criadoEm: "asc" }],
     include: { _count: { select: { valores: true } } },
   });
-  const atletas = listarPerfis();
+  const atletas = await listarPerfis({ incluirOcultos: true });
 
   return (
     <>
@@ -85,7 +85,7 @@ export default async function AdminNumeros({ searchParams }: Props) {
         const padrao = doEsporte.filter((c) => c.posicao === null);
         // Posições com números próprios + posições dos atletas desse esporte (para sugerir no formulário)
         const posicoes = [...new Set(doEsporte.flatMap((c) => (c.posicao ? [c.posicao] : [])))].sort((a, b) => a.localeCompare(b, "pt-BR"));
-        const sugestoes = [...new Set([...posicoes, ...atletas.filter((a) => a.esporte === esporte).map((a) => a.posicao)])].sort();
+        const sugestoes = [...new Set([...posicoes, ...atletas.filter((a) => a.esporte === esporte).flatMap((a) => (a.posicao ? [a.posicao] : []))])].sort();
         const listaId = `posicoes-${ancoraEsporte(esporte)}`;
 
         return (

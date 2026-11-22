@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { buscarPerfil } from "@/constants/atletas-perfil";
 import { pt } from "@/i18n/dicionarios/pt";
 import { obterTextos } from "@/i18n/servidor";
-import { rotuloEstatistica, siglaPosicao, traduzirCategoria, traduzirValor } from "@/i18n/valores";
+import { funcaoAtleta, rotuloEstatistica, siglaPosicao } from "@/i18n/valores";
 import { numerosDoAtleta } from "@/services/estatistica.service";
 
 /** Prévia do perfil ao compartilhar: card do atleta com posição e números, no idioma da página. */
@@ -12,7 +12,7 @@ export const contentType = "image/png";
 
 export default async function ImagemAtleta({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const atleta = buscarPerfil(slug);
+  const atleta = await buscarPerfil(slug);
   const { idioma, t } = await obterTextos();
   const numeros = atleta ? await numerosDoAtleta(atleta) : null;
   const nome = atleta?.nome ?? t.perfil.atletaPadrao;
@@ -47,15 +47,13 @@ export default async function ImagemAtleta({ params }: { params: Promise<{ slug:
             background: "linear-gradient(170deg, #2c2c2c, #0b0b0b)",
           }}
         >
-          <div style={{ display: "flex", fontSize: 110, fontWeight: 800, color: "#ea8326", lineHeight: 1  }}>{atleta ? siglaPosicao(t, atleta.posicao) : "—"}</div>
+          <div style={{ display: "flex", fontSize: 110, fontWeight: 800, color: "#ea8326", lineHeight: 1  }}>{(atleta && siglaPosicao(t, atleta.posicao)) || "VMD"}</div>
           <div style={{ display: "flex", fontSize: 26, color: "#bbb", marginTop: 30, letterSpacing: 6, fontStyle: "italic"  }}>VMD</div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <div style={{ display: "flex", fontSize: 28, color: "#ea8326", letterSpacing: 6  }}>
-            {atleta
-              ? `${traduzirValor(t, "posicoes", atleta.posicao).toUpperCase()} · ${traduzirCategoria(t, atleta.categoria).toUpperCase()}`
-              : t.perfil.atleta.toUpperCase()}
+            {((atleta && funcaoAtleta(t, atleta.posicao, atleta.categoria)) || t.perfil.atleta).toUpperCase()}
           </div>
           <div style={{ display: "flex", fontSize: 78, fontWeight: 800, lineHeight: 1.05, marginTop: 16  }}>{nome.toUpperCase()}</div>
           <div style={{ display: "flex", fontSize: 32, color: "#ccc", marginTop: 14  }}>{atleta?.clube ?? ""}</div>

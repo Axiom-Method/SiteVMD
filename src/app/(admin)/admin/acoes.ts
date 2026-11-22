@@ -30,7 +30,7 @@ export async function salvarNumeros(form: FormData): Promise<void> {
   const slug = String(form.get("slug") ?? "");
   const voltar = `/admin/atletas/${encodeURIComponent(slug)}`;
 
-  const atleta = buscarPerfil(slug);
+  const atleta = await buscarPerfil(slug, { incluirOcultos: true });
   if (!atleta) redirect(comAviso("/admin/atletas", "erro", "Atleta não encontrado."));
 
   const valores: Record<string, string> = {};
